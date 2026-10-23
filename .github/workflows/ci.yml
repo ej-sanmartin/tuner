@@ -1,0 +1,43 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.13"
+      - run: uv sync --locked
+      - run: uv run ruff check src tests
+      - run: uv run pytest
+      - name: Build and smoke-test the wheel
+        shell: bash
+        run: |
+          uv build
+          uv tool install --force dist/*.whl
+          tuner --version
+          python - <<'PY'
+          import glob, zipfile
+          names = zipfile.ZipFile(glob.glob("dist/*.whl")[0]).namelist()
+          for needed in ("tuner/_agent_skills/tuner/SKILL.md",
+                         "tuner/reports/templates/report.html",
+                         "tuner/pricing/data/pricing_snapshot.json"):
+              assert needed in names, needed
+          PY
+        env:
+          TUNER_HOME: ${{ runner.temp }}/tuner-ci
+          TUNER_FAKE_HOME: ${{ runner.temp }}/home-ci

@@ -1,0 +1,47 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "agent-tuner"
+version = "0.1.0"
+description = "Understand your AI usage. Tune your agent workflows."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.13"
+authors = [{ name = "Tuner contributors" }]
+keywords = ["ai", "agents", "cursor", "claude-code", "token-usage", "skills"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Environment :: Console",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: MacOS",
+  "Operating System :: Microsoft :: Windows",
+  "Programming Language :: Python :: 3.13",
+]
+# Zero runtime dependencies on purpose; tzdata only for Windows zoneinfo.
+dependencies = ["tzdata; sys_platform == 'win32'"]
+
+[project.scripts]
+tuner = "tuner.cli:main"
+
+[dependency-groups]
+dev = ["pytest>=8", "ruff>=0.6"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/tuner"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"agent-skills" = "tuner/_agent_skills"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 80
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]

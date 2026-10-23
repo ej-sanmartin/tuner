@@ -1,0 +1,2044 @@
+{
+ "_meta": {
+  "effective_date": null,
+  "fetched_at": "2026-10-23T03:18:38Z",
+  "license": "MIT (BerriAI/litellm)",
+  "note": "Current list prices; no historical effective dates.",
+  "source": "https://raw.githubusercontent.com/BerriAI/litellm/main/litellm/model_prices_and_context_window_backup.json",
+  "unit": "USD per 1M tokens"
+ },
+ "models": {
+  "chat-latest": {
+   "cache_read": 0.5,
+   "cache_write": null,
+   "input": 5.0,
+   "output": 30.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "claude-fable-5": {
+   "cache_read": 1.0,
+   "cache_write": 12.5,
+   "input": 10.0,
+   "output": 50.0,
+   "provider": "anthropic",
+   "tiered": false
+  },
+  "claude-fable-5-1": {
+   "cache_read": 0.25,
+   "cache_write": 12.5,
+   "input": 10.0,
+   "output": 50.0,
+   "provider": "anthropic",
+   "tiered": false
+  },
+  "claude-haiku-4-5": {
+   "cache_read": 0.1,
+   "cache_write": 1.25,
+   "input": 1.0,
+   "output": 5.0,
+   "provider": "anthropic",
+   "tiered": false
+  },
+  "claude-haiku-4-5-20251001": {
+   "cache_read": 0.1,
+   "cache_write": 1.25,
+   "input": 1.0,
+   "output": 5.0,
+   "provider": "anthropic",
+   "tiered": false
+  },
+  "claude-haiku-5-5": {
+   "cache_read": 0.01,
+   "cache_write": 0.125,
+   "input": 0.1,
+   "output": 0.5,
+   "provider": "anthropic",
+   "tiered": false
+  },
+  "claude-mythos-5": {
+   "cache_read": 1.0,
+   "cache_write": 12.5,
+   "input": 10.0,
+   "output": 50.0,
+   "provider": "anthropic",
+   "tiered": false
+  },
+  "claude-mythos-5-1": {
+   "cache_read": 0.25,
+   "cache_write": 12.5,
+   "input": 10.0,
+   "output": 50.0,
+   "provider": "anthropic",
+   "tiered": false
+  },
+  "claude-mythos-preview": {
+   "cache_read": 1.0,
+   "cache_write": 12.5,
+   "input": 10.0,
+   "output": 50.0,
+   "provider": "anthropic",
+   "tiered": false
+  },
+  "claude-opus-4-5": {
+   "cache_read": 0.5,
+   "cache_write": 6.25,
+   "input": 5.0,
+   "output": 25.0,
+   "provider": "anthropic",
+   "tiered": false
+  },
+  "claude-opus-4-5-20251101": {
+   "cache_read": 0.5,
+   "cache_write": 6.25,
+   "input": 5.0,
+   "output": 25.0,
+   "provider": "anthropic",
+   "tiered": false
+  },
+  "claude-opus-4-6": {
+   "cache_read": 0.5,
+   "cache_write": 6.25,
+   "input": 5.0,
+   "output": 25.0,
+   "provider": "anthropic",
+   "tiered": false
+  },
+  "claude-opus-4-6-20260205": {
+   "cache_read": 0.5,
+   "cache_write": 6.25,
+   "input": 5.0,
+   "output": 25.0,
+   "provider": "anthropic",
+   "tiered": false
+  },
+  "claude-opus-4-7": {
+   "cache_read": 0.5,
+   "cache_write": 6.25,
+   "input": 5.0,
+   "output": 25.0,
+   "provider": "anthropic",
+   "tiered": false
+  },
+  "claude-opus-4-7-20260416": {
+   "cache_read": 0.5,
+   "cache_write": 6.25,
+   "input": 5.0,
+   "output": 25.0,
+   "provider": "anthropic",
+   "tiered": false
+  },
+  "claude-opus-4-8": {
+   "cache_read": 0.5,
+   "cache_write": 6.25,
+   "input": 5.0,
+   "output": 25.0,
+   "provider": "anthropic",
+   "tiered": false
+  },
+  "claude-opus-5": {
+   "cache_read": 0.5,
+   "cache_write": 6.25,
+   "input": 5.0,
+   "output": 25.0,
+   "provider": "anthropic",
+   "tiered": false
+  },
+  "claude-opus-5-5": {
+   "cache_read": 0.2,
+   "cache_write": 5.0,
+   "input": 4.0,
+   "output": 20.0,
+   "provider": "anthropic",
+   "tiered": false
+  },
+  "claude-sonnet-4-5": {
+   "cache_read": 0.3,
+   "cache_write": 3.75,
+   "input": 3.0,
+   "output": 15.0,
+   "provider": "anthropic",
+   "tiered": false
+  },
+  "claude-sonnet-4-5-20250929": {
+   "cache_read": 0.3,
+   "cache_write": 3.75,
+   "input": 3.0,
+   "output": 15.0,
+   "provider": "anthropic",
+   "tiered": false
+  },
+  "claude-sonnet-4-6": {
+   "cache_read": 0.3,
+   "cache_write": 3.75,
+   "input": 3.0,
+   "output": 15.0,
+   "provider": "anthropic",
+   "tiered": false
+  },
+  "claude-sonnet-5": {
+   "cache_read": 0.2,
+   "cache_write": 2.5,
+   "input": 2.0,
+   "output": 10.0,
+   "provider": "anthropic",
+   "tiered": false
+  },
+  "claude-sonnet-5-5": {
+   "cache_read": 0.1,
+   "cache_write": 2.5,
+   "input": 2.0,
+   "output": 10.0,
+   "provider": "anthropic",
+   "tiered": false
+  },
+  "codestral-2508": {
+   "cache_read": 0.03,
+   "cache_write": null,
+   "input": 0.3,
+   "output": 0.9,
+   "provider": "mistral",
+   "tiered": false
+  },
+  "codestral-latest": {
+   "cache_read": 0.03,
+   "cache_write": null,
+   "input": 0.3,
+   "output": 0.9,
+   "provider": "mistral",
+   "tiered": false
+  },
+  "codestral-mamba-latest": {
+   "cache_read": 0.025,
+   "cache_write": null,
+   "input": 0.25,
+   "output": 0.25,
+   "provider": "mistral",
+   "tiered": false
+  },
+  "computer-use-preview": {
+   "cache_read": null,
+   "cache_write": null,
+   "input": 3.0,
+   "output": 12.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "computer-use-preview-2025-03-11": {
+   "cache_read": null,
+   "cache_write": null,
+   "input": 3.0,
+   "output": 12.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "daybreak-blue-latest": {
+   "cache_read": 0.4,
+   "cache_write": 5.0,
+   "input": 4.0,
+   "output": 20.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "daybreak-red-latest": {
+   "cache_read": 1.25,
+   "cache_write": 15.625,
+   "input": 12.5,
+   "output": 75.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "deep-research-max-preview-04-2026": {
+   "cache_read": null,
+   "cache_write": null,
+   "input": 2.0,
+   "output": 12.0,
+   "provider": "gemini",
+   "tiered": false
+  },
+  "deep-research-preview-04-2026": {
+   "cache_read": null,
+   "cache_write": null,
+   "input": 2.0,
+   "output": 12.0,
+   "provider": "gemini",
+   "tiered": false
+  },
+  "deep-research-pro-preview-12-2025": {
+   "cache_read": null,
+   "cache_write": null,
+   "input": 2.0,
+   "output": 12.0,
+   "provider": "gemini",
+   "tiered": false
+  },
+  "deepseek-chat": {
+   "cache_read": 0.028,
+   "cache_write": null,
+   "input": 0.28,
+   "output": 0.42,
+   "provider": "deepseek",
+   "tiered": false
+  },
+  "deepseek-coder": {
+   "cache_read": 0.014,
+   "cache_write": null,
+   "input": 0.14,
+   "output": 0.28,
+   "provider": "deepseek",
+   "tiered": false
+  },
+  "deepseek-flash": {
+   "cache_read": 0.006,
+   "cache_write": 0.0,
+   "input": 0.3,
+   "output": 1.2,
+   "provider": "deepseek",
+   "tiered": false
+  },
+  "deepseek-r1": {
+   "cache_read": 0.14,
+   "cache_write": null,
+   "input": 0.55,
+   "output": 2.19,
+   "provider": "deepseek",
+   "tiered": false
+  },
+  "deepseek-reasoner": {
+   "cache_read": 0.028,
+   "cache_write": null,
+   "input": 0.28,
+   "output": 0.42,
+   "provider": "deepseek",
+   "tiered": false
+  },
+  "deepseek-v3": {
+   "cache_read": 0.07,
+   "cache_write": 0.0,
+   "input": 0.27,
+   "output": 1.1,
+   "provider": "deepseek",
+   "tiered": false
+  },
+  "deepseek-v3.2": {
+   "cache_read": 0.028,
+   "cache_write": null,
+   "input": 0.28,
+   "output": 0.4,
+   "provider": "deepseek",
+   "tiered": false
+  },
+  "deepseek-v4-flash": {
+   "cache_read": 0.006,
+   "cache_write": 0.0,
+   "input": 0.3,
+   "output": 1.2,
+   "provider": "deepseek",
+   "tiered": false
+  },
+  "deepseek-v4-flash-vision-exp": {
+   "cache_read": 0.006,
+   "cache_write": 0.0,
+   "input": 0.3,
+   "output": 1.2,
+   "provider": "deepseek",
+   "tiered": false
+  },
+  "deepseek-v4-pro": {
+   "cache_read": 0.044,
+   "cache_write": 0.0,
+   "input": 1.32,
+   "output": 3.96,
+   "provider": "deepseek",
+   "tiered": false
+  },
+  "devstral-latest": {
+   "cache_read": 0.04,
+   "cache_write": null,
+   "input": 0.4,
+   "output": 2.0,
+   "provider": "mistral",
+   "tiered": false
+  },
+  "devstral-medium-latest": {
+   "cache_read": 0.04,
+   "cache_write": null,
+   "input": 0.4,
+   "output": 2.0,
+   "provider": "mistral",
+   "tiered": false
+  },
+  "devstral-small-latest": {
+   "cache_read": 0.01,
+   "cache_write": null,
+   "input": 0.1,
+   "output": 0.3,
+   "provider": "mistral",
+   "tiered": false
+  },
+  "ft:gpt-3.5-turbo": {
+   "cache_read": null,
+   "cache_write": null,
+   "input": 3.0,
+   "output": 6.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "ft:gpt-3.5-turbo-0125": {
+   "cache_read": null,
+   "cache_write": null,
+   "input": 3.0,
+   "output": 6.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "ft:gpt-3.5-turbo-0613": {
+   "cache_read": null,
+   "cache_write": null,
+   "input": 3.0,
+   "output": 6.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "ft:gpt-3.5-turbo-1106": {
+   "cache_read": null,
+   "cache_write": null,
+   "input": 3.0,
+   "output": 6.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "ft:gpt-4-0613": {
+   "cache_read": null,
+   "cache_write": null,
+   "input": 30.0,
+   "output": 60.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "ft:gpt-4.1-2025-04-14": {
+   "cache_read": 0.75,
+   "cache_write": null,
+   "input": 3.0,
+   "output": 12.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "ft:gpt-4.1-mini-2025-04-14": {
+   "cache_read": 0.2,
+   "cache_write": null,
+   "input": 0.8,
+   "output": 3.2,
+   "provider": "openai",
+   "tiered": false
+  },
+  "ft:gpt-4.1-nano-2025-04-14": {
+   "cache_read": 0.05,
+   "cache_write": null,
+   "input": 0.2,
+   "output": 0.8,
+   "provider": "openai",
+   "tiered": false
+  },
+  "ft:gpt-4o-2024-08-06": {
+   "cache_read": 1.875,
+   "cache_write": null,
+   "input": 3.75,
+   "output": 15.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "ft:gpt-4o-2024-11-20": {
+   "cache_read": null,
+   "cache_write": 1.875,
+   "input": 3.75,
+   "output": 15.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "ft:gpt-4o-mini-2024-07-18": {
+   "cache_read": 0.15,
+   "cache_write": null,
+   "input": 0.3,
+   "output": 1.2,
+   "provider": "openai",
+   "tiered": false
+  },
+  "ft:o4-mini-2025-04-16": {
+   "cache_read": 1.0,
+   "cache_write": null,
+   "input": 4.0,
+   "output": 16.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gemini-2.5-computer-use-preview-10-2025": {
+   "cache_read": null,
+   "cache_write": null,
+   "input": 1.25,
+   "output": 10.0,
+   "provider": "gemini",
+   "tiered": true
+  },
+  "gemini-2.5-flash": {
+   "cache_read": 0.03,
+   "cache_write": null,
+   "input": 0.3,
+   "output": 2.5,
+   "provider": "gemini",
+   "tiered": false
+  },
+  "gemini-2.5-flash-lite": {
+   "cache_read": 0.01,
+   "cache_write": null,
+   "input": 0.1,
+   "output": 0.4,
+   "provider": "gemini",
+   "tiered": false
+  },
+  "gemini-2.5-pro": {
+   "cache_read": 0.125,
+   "cache_write": null,
+   "input": 1.25,
+   "output": 10.0,
+   "provider": "gemini",
+   "tiered": true
+  },
+  "gemini-2.5-pro-preview-tts": {
+   "cache_read": 0.125,
+   "cache_write": null,
+   "input": 1.0,
+   "output": 20.0,
+   "provider": "gemini",
+   "tiered": false
+  },
+  "gemini-3-flash-preview": {
+   "cache_read": 0.05,
+   "cache_write": null,
+   "input": 0.5,
+   "output": 3.0,
+   "provider": "gemini",
+   "tiered": false
+  },
+  "gemini-3.1-flash-lite": {
+   "cache_read": 0.025,
+   "cache_write": null,
+   "input": 0.25,
+   "output": 1.5,
+   "provider": "gemini",
+   "tiered": false
+  },
+  "gemini-3.1-flash-lite-preview": {
+   "cache_read": 0.025,
+   "cache_write": null,
+   "input": 0.25,
+   "output": 1.5,
+   "provider": "gemini",
+   "tiered": false
+  },
+  "gemini-3.1-pro-preview": {
+   "cache_read": 0.2,
+   "cache_write": null,
+   "input": 2.0,
+   "output": 12.0,
+   "provider": "gemini",
+   "tiered": true
+  },
+  "gemini-3.1-pro-preview-customtools": {
+   "cache_read": 0.2,
+   "cache_write": null,
+   "input": 2.0,
+   "output": 12.0,
+   "provider": "gemini",
+   "tiered": true
+  },
+  "gemini-3.5-flash": {
+   "cache_read": 0.15,
+   "cache_write": null,
+   "input": 1.5,
+   "output": 9.0,
+   "provider": "gemini",
+   "tiered": false
+  },
+  "gemini-3.5-flash-lite": {
+   "cache_read": 0.03,
+   "cache_write": null,
+   "input": 0.3,
+   "output": 2.5,
+   "provider": "gemini",
+   "tiered": false
+  },
+  "gemini-3.6-flash": {
+   "cache_read": 0.075,
+   "cache_write": null,
+   "input": 0.75,
+   "output": 3.75,
+   "provider": "gemini",
+   "tiered": false
+  },
+  "gemini-3.7-flash": {
+   "cache_read": 0.075,
+   "cache_write": null,
+   "input": 0.75,
+   "output": 3.75,
+   "provider": "gemini",
+   "tiered": false
+  },
+  "gemini-3.8-flash": {
+   "cache_read": 0.075,
+   "cache_write": null,
+   "input": 0.75,
+   "output": 3.75,
+   "provider": "gemini",
+   "tiered": false
+  },
+  "gemini-4-argon": {
+   "cache_read": 0.1,
+   "cache_write": null,
+   "input": 2.0,
+   "output": 10.0,
+   "provider": "gemini",
+   "tiered": false
+  },
+  "gemini-exp-1114": {
+   "cache_read": null,
+   "cache_write": null,
+   "input": 0,
+   "output": 0,
+   "provider": "gemini",
+   "tiered": false
+  },
+  "gemini-exp-1206": {
+   "cache_read": 0.03,
+   "cache_write": null,
+   "input": 0.3,
+   "output": 2.5,
+   "provider": "gemini",
+   "tiered": false
+  },
+  "gemini-flash-latest": {
+   "cache_read": 0.075,
+   "cache_write": null,
+   "input": 0.75,
+   "output": 3.75,
+   "provider": "gemini",
+   "tiered": false
+  },
+  "gemini-flash-lite-latest": {
+   "cache_read": 0.03,
+   "cache_write": null,
+   "input": 0.3,
+   "output": 2.5,
+   "provider": "gemini",
+   "tiered": false
+  },
+  "gemini-gemma-2-27b-it": {
+   "cache_read": null,
+   "cache_write": null,
+   "input": 0.35,
+   "output": 1.05,
+   "provider": "gemini",
+   "tiered": false
+  },
+  "gemini-gemma-2-9b-it": {
+   "cache_read": null,
+   "cache_write": null,
+   "input": 0.35,
+   "output": 1.05,
+   "provider": "gemini",
+   "tiered": false
+  },
+  "gemini-omni-1.1-flash": {
+   "cache_read": null,
+   "cache_write": null,
+   "input": 1.5,
+   "output": 9.0,
+   "provider": "gemini",
+   "tiered": false
+  },
+  "gemini-omni-flash-preview": {
+   "cache_read": null,
+   "cache_write": null,
+   "input": 1.5,
+   "output": 9.0,
+   "provider": "gemini",
+   "tiered": false
+  },
+  "gemini-pro-latest": {
+   "cache_read": 0.2,
+   "cache_write": null,
+   "input": 2.0,
+   "output": 12.0,
+   "provider": "gemini",
+   "tiered": true
+  },
+  "gemini-robotics-er-2-preview": {
+   "cache_read": 0.1,
+   "cache_write": null,
+   "input": 1.0,
+   "output": 5.0,
+   "provider": "gemini",
+   "tiered": false
+  },
+  "gemini-robotics-er-2-streaming-preview": {
+   "cache_read": null,
+   "cache_write": null,
+   "input": 1.0,
+   "output": 5.0,
+   "provider": "gemini",
+   "tiered": false
+  },
+  "gemma-3-27b-it": {
+   "cache_read": null,
+   "cache_write": null,
+   "input": 0,
+   "output": 0,
+   "provider": "gemini",
+   "tiered": false
+  },
+  "gemma-4-26b-a4b-it": {
+   "cache_read": null,
+   "cache_write": null,
+   "input": 0.0,
+   "output": 0.0,
+   "provider": "gemini",
+   "tiered": false
+  },
+  "gemma-4-31b-it": {
+   "cache_read": null,
+   "cache_write": null,
+   "input": 0.0,
+   "output": 0.0,
+   "provider": "gemini",
+   "tiered": false
+  },
+  "glm-5-2": {
+   "cache_read": 0.14,
+   "cache_write": null,
+   "input": 1.4,
+   "output": 4.4,
+   "provider": "mistral",
+   "tiered": false
+  },
+  "gpt-3.5-turbo": {
+   "cache_read": null,
+   "cache_write": null,
+   "input": 0.5,
+   "output": 1.5,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-3.5-turbo-0125": {
+   "cache_read": null,
+   "cache_write": null,
+   "input": 0.5,
+   "output": 1.5,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-3.5-turbo-1106": {
+   "cache_read": null,
+   "cache_write": null,
+   "input": 1.0,
+   "output": 2.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-3.5-turbo-16k": {
+   "cache_read": null,
+   "cache_write": null,
+   "input": 3.0,
+   "output": 4.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-4": {
+   "cache_read": null,
+   "cache_write": null,
+   "input": 30.0,
+   "output": 60.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-4-0613": {
+   "cache_read": null,
+   "cache_write": null,
+   "input": 30.0,
+   "output": 60.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-4-1106-preview": {
+   "cache_read": null,
+   "cache_write": null,
+   "input": 10.0,
+   "output": 30.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-4-turbo": {
+   "cache_read": null,
+   "cache_write": null,
+   "input": 10.0,
+   "output": 30.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-4-turbo-2024-04-09": {
+   "cache_read": null,
+   "cache_write": null,
+   "input": 10.0,
+   "output": 30.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-4.1": {
+   "cache_read": 0.5,
+   "cache_write": null,
+   "input": 2.0,
+   "output": 8.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-4.1-2025-04-14": {
+   "cache_read": 0.5,
+   "cache_write": null,
+   "input": 2.0,
+   "output": 8.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-4.1-mini": {
+   "cache_read": 0.1,
+   "cache_write": null,
+   "input": 0.4,
+   "output": 1.6,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-4.1-mini-2025-04-14": {
+   "cache_read": 0.1,
+   "cache_write": null,
+   "input": 0.4,
+   "output": 1.6,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-4.1-nano": {
+   "cache_read": 0.025,
+   "cache_write": null,
+   "input": 0.1,
+   "output": 0.4,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-4.1-nano-2025-04-14": {
+   "cache_read": 0.025,
+   "cache_write": null,
+   "input": 0.1,
+   "output": 0.4,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-4o": {
+   "cache_read": 1.25,
+   "cache_write": null,
+   "input": 2.5,
+   "output": 10.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-4o-2024-05-13": {
+   "cache_read": null,
+   "cache_write": null,
+   "input": 5.0,
+   "output": 15.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-4o-2024-08-06": {
+   "cache_read": 1.25,
+   "cache_write": null,
+   "input": 2.5,
+   "output": 10.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-4o-2024-11-20": {
+   "cache_read": 1.25,
+   "cache_write": null,
+   "input": 2.5,
+   "output": 10.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-4o-audio-preview-2024-12-17": {
+   "cache_read": null,
+   "cache_write": null,
+   "input": 2.5,
+   "output": 10.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-4o-audio-preview-2025-06-03": {
+   "cache_read": null,
+   "cache_write": null,
+   "input": 2.5,
+   "output": 10.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-4o-mini": {
+   "cache_read": 0.075,
+   "cache_write": null,
+   "input": 0.15,
+   "output": 0.6,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-4o-mini-2024-07-18": {
+   "cache_read": 0.075,
+   "cache_write": null,
+   "input": 0.15,
+   "output": 0.6,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-4o-mini-audio-preview-2024-12-17": {
+   "cache_read": null,
+   "cache_write": null,
+   "input": 0.15,
+   "output": 0.6,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-4o-mini-search-preview": {
+   "cache_read": 0.075,
+   "cache_write": null,
+   "input": 0.15,
+   "output": 0.6,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-4o-mini-search-preview-2025-03-11": {
+   "cache_read": 0.075,
+   "cache_write": null,
+   "input": 0.15,
+   "output": 0.6,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-4o-search-preview": {
+   "cache_read": 1.25,
+   "cache_write": null,
+   "input": 2.5,
+   "output": 10.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-4o-search-preview-2025-03-11": {
+   "cache_read": 1.25,
+   "cache_write": null,
+   "input": 2.5,
+   "output": 10.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-5": {
+   "cache_read": 0.125,
+   "cache_write": null,
+   "input": 1.25,
+   "output": 10.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-5-2025-08-07": {
+   "cache_read": 0.125,
+   "cache_write": null,
+   "input": 1.25,
+   "output": 10.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-5-chat": {
+   "cache_read": 0.125,
+   "cache_write": null,
+   "input": 1.25,
+   "output": 10.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-5-chat-latest": {
+   "cache_read": 0.125,
+   "cache_write": null,
+   "input": 1.25,
+   "output": 10.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-5-mini": {
+   "cache_read": 0.025,
+   "cache_write": null,
+   "input": 0.25,
+   "output": 2.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-5-mini-2025-08-07": {
+   "cache_read": 0.025,
+   "cache_write": null,
+   "input": 0.25,
+   "output": 2.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-5-nano": {
+   "cache_read": 0.005,
+   "cache_write": null,
+   "input": 0.05,
+   "output": 0.4,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-5-nano-2025-08-07": {
+   "cache_read": 0.005,
+   "cache_write": null,
+   "input": 0.05,
+   "output": 0.4,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-5-search-api": {
+   "cache_read": 0.125,
+   "cache_write": null,
+   "input": 1.25,
+   "output": 10.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-5-search-api-2025-10-14": {
+   "cache_read": 0.125,
+   "cache_write": null,
+   "input": 1.25,
+   "output": 10.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-5.1": {
+   "cache_read": 0.125,
+   "cache_write": null,
+   "input": 1.25,
+   "output": 10.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-5.1-2025-11-13": {
+   "cache_read": 0.125,
+   "cache_write": null,
+   "input": 1.25,
+   "output": 10.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-5.1-chat-latest": {
+   "cache_read": 0.125,
+   "cache_write": null,
+   "input": 1.25,
+   "output": 10.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-5.2": {
+   "cache_read": 0.175,
+   "cache_write": null,
+   "input": 1.75,
+   "output": 14.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-5.2-2025-12-11": {
+   "cache_read": 0.175,
+   "cache_write": null,
+   "input": 1.75,
+   "output": 14.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-5.2-chat-latest": {
+   "cache_read": 0.175,
+   "cache_write": null,
+   "input": 1.75,
+   "output": 14.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-5.3-chat-latest": {
+   "cache_read": 0.175,
+   "cache_write": null,
+   "input": 1.75,
+   "output": 14.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-5.4": {
+   "cache_read": 0.25,
+   "cache_write": null,
+   "input": 2.5,
+   "output": 15.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-5.4-2026-03-05": {
+   "cache_read": 0.25,
+   "cache_write": null,
+   "input": 2.5,
+   "output": 15.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-5.4-mini": {
+   "cache_read": 0.075,
+   "cache_write": null,
+   "input": 0.75,
+   "output": 4.5,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-5.4-mini-2026-03-17": {
+   "cache_read": 0.075,
+   "cache_write": null,
+   "input": 0.75,
+   "output": 4.5,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-5.4-nano": {
+   "cache_read": 0.02,
+   "cache_write": null,
+   "input": 0.2,
+   "output": 1.25,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-5.4-nano-2026-03-17": {
+   "cache_read": 0.02,
+   "cache_write": null,
+   "input": 0.2,
+   "output": 1.25,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-5.5": {
+   "cache_read": 0.5,
+   "cache_write": null,
+   "input": 5.0,
+   "output": 30.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-5.5-2026-04-23": {
+   "cache_read": 0.5,
+   "cache_write": null,
+   "input": 5.0,
+   "output": 30.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-5.5-cyber": {
+   "cache_read": 1.25,
+   "cache_write": null,
+   "input": 12.5,
+   "output": 75.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-5.5-cyber-preview": {
+   "cache_read": 1.25,
+   "cache_write": null,
+   "input": 12.5,
+   "output": 75.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-5.6": {
+   "cache_read": 0.4,
+   "cache_write": 5.0,
+   "input": 4.0,
+   "output": 20.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-5.6-cyber": {
+   "cache_read": 1.25,
+   "cache_write": 15.625,
+   "input": 12.5,
+   "output": 75.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-5.6-luna": {
+   "cache_read": 0.02,
+   "cache_write": 0.25,
+   "input": 0.2,
+   "output": 1.2,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-5.6-sol": {
+   "cache_read": 0.4,
+   "cache_write": 5.0,
+   "input": 4.0,
+   "output": 20.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-5.6-terra": {
+   "cache_read": 0.2,
+   "cache_write": 2.5,
+   "input": 2.0,
+   "output": 12.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-6-astra": {
+   "cache_read": 1.0,
+   "cache_write": 12.5,
+   "input": 10.0,
+   "output": 50.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-6-luna": {
+   "cache_read": 0.01,
+   "cache_write": 0.125,
+   "input": 0.1,
+   "output": 0.5,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-6-sol": {
+   "cache_read": 0.2,
+   "cache_write": 2.5,
+   "input": 2.0,
+   "output": 10.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-6.1-sol": {
+   "cache_read": 0.1,
+   "cache_write": 2.5,
+   "input": 2.0,
+   "output": 10.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-audio": {
+   "cache_read": null,
+   "cache_write": null,
+   "input": 2.5,
+   "output": 10.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-audio-1.5": {
+   "cache_read": null,
+   "cache_write": null,
+   "input": 2.5,
+   "output": 10.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-audio-2025-08-28": {
+   "cache_read": null,
+   "cache_write": null,
+   "input": 2.5,
+   "output": 10.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-audio-mini": {
+   "cache_read": null,
+   "cache_write": null,
+   "input": 0.6,
+   "output": 2.4,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-audio-mini-2025-10-06": {
+   "cache_read": null,
+   "cache_write": null,
+   "input": 0.6,
+   "output": 2.4,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-audio-mini-2025-12-15": {
+   "cache_read": null,
+   "cache_write": null,
+   "input": 0.6,
+   "output": 2.4,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-rosalind-discovery": {
+   "cache_read": 0.5,
+   "cache_write": null,
+   "input": 5.0,
+   "output": 25.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "gpt-rosalind-research": {
+   "cache_read": 0.5,
+   "cache_write": null,
+   "input": 5.0,
+   "output": 25.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "grok-4.20": {
+   "cache_read": 0.2,
+   "cache_write": null,
+   "input": 1.25,
+   "output": 2.5,
+   "provider": "xai",
+   "tiered": true
+  },
+  "grok-4.20-0309": {
+   "cache_read": 0.2,
+   "cache_write": null,
+   "input": 1.25,
+   "output": 2.5,
+   "provider": "xai",
+   "tiered": true
+  },
+  "grok-4.20-0309-non-reasoning": {
+   "cache_read": 0.2,
+   "cache_write": null,
+   "input": 1.25,
+   "output": 2.5,
+   "provider": "xai",
+   "tiered": true
+  },
+  "grok-4.20-0309-reasoning": {
+   "cache_read": 0.2,
+   "cache_write": null,
+   "input": 1.25,
+   "output": 2.5,
+   "provider": "xai",
+   "tiered": true
+  },
+  "grok-4.20-beta": {
+   "cache_read": 0.2,
+   "cache_write": null,
+   "input": 1.25,
+   "output": 2.5,
+   "provider": "xai",
+   "tiered": true
+  },
+  "grok-4.20-beta-0309": {
+   "cache_read": 0.2,
+   "cache_write": null,
+   "input": 1.25,
+   "output": 2.5,
+   "provider": "xai",
+   "tiered": true
+  },
+  "grok-4.20-beta-0309-non-reasoning": {
+   "cache_read": 0.2,
+   "cache_write": null,
+   "input": 1.25,
+   "output": 2.5,
+   "provider": "xai",
+   "tiered": true
+  },
+  "grok-4.20-beta-0309-reasoning": {
+   "cache_read": 0.2,
+   "cache_write": null,
+   "input": 1.25,
+   "output": 2.5,
+   "provider": "xai",
+   "tiered": true
+  },
+  "grok-4.20-beta-latest": {
+   "cache_read": 0.2,
+   "cache_write": null,
+   "input": 1.25,
+   "output": 2.5,
+   "provider": "xai",
+   "tiered": true
+  },
+  "grok-4.20-beta-latest-non-reasoning": {
+   "cache_read": 0.2,
+   "cache_write": null,
+   "input": 1.25,
+   "output": 2.5,
+   "provider": "xai",
+   "tiered": true
+  },
+  "grok-4.20-beta-latest-reasoning": {
+   "cache_read": 0.2,
+   "cache_write": null,
+   "input": 1.25,
+   "output": 2.5,
+   "provider": "xai",
+   "tiered": true
+  },
+  "grok-4.20-beta-non-reasoning": {
+   "cache_read": 0.2,
+   "cache_write": null,
+   "input": 1.25,
+   "output": 2.5,
+   "provider": "xai",
+   "tiered": true
+  },
+  "grok-4.20-beta-reasoning": {
+   "cache_read": 0.2,
+   "cache_write": null,
+   "input": 1.25,
+   "output": 2.5,
+   "provider": "xai",
+   "tiered": true
+  },
+  "grok-4.20-experimental-beta-0304": {
+   "cache_read": 0.2,
+   "cache_write": null,
+   "input": 1.25,
+   "output": 2.5,
+   "provider": "xai",
+   "tiered": true
+  },
+  "grok-4.20-experimental-beta-0304-non-reasoning": {
+   "cache_read": 0.2,
+   "cache_write": null,
+   "input": 1.25,
+   "output": 2.5,
+   "provider": "xai",
+   "tiered": true
+  },
+  "grok-4.20-experimental-beta-0304-reasoning": {
+   "cache_read": 0.2,
+   "cache_write": null,
+   "input": 1.25,
+   "output": 2.5,
+   "provider": "xai",
+   "tiered": true
+  },
+  "grok-4.20-experimental-beta-latest": {
+   "cache_read": 0.2,
+   "cache_write": null,
+   "input": 1.25,
+   "output": 2.5,
+   "provider": "xai",
+   "tiered": true
+  },
+  "grok-4.20-experimental-beta-non-reasoning-latest": {
+   "cache_read": 0.2,
+   "cache_write": null,
+   "input": 1.25,
+   "output": 2.5,
+   "provider": "xai",
+   "tiered": true
+  },
+  "grok-4.20-experimental-beta-reasoning-latest": {
+   "cache_read": 0.2,
+   "cache_write": null,
+   "input": 1.25,
+   "output": 2.5,
+   "provider": "xai",
+   "tiered": true
+  },
+  "grok-4.20-non-reasoning": {
+   "cache_read": 0.2,
+   "cache_write": null,
+   "input": 1.25,
+   "output": 2.5,
+   "provider": "xai",
+   "tiered": true
+  },
+  "grok-4.20-non-reasoning-gv2": {
+   "cache_read": 0.2,
+   "cache_write": null,
+   "input": 1.25,
+   "output": 2.5,
+   "provider": "xai",
+   "tiered": true
+  },
+  "grok-4.20-non-reasoning-latest": {
+   "cache_read": 0.2,
+   "cache_write": null,
+   "input": 1.25,
+   "output": 2.5,
+   "provider": "xai",
+   "tiered": true
+  },
+  "grok-4.20-reasoning": {
+   "cache_read": 0.2,
+   "cache_write": null,
+   "input": 1.25,
+   "output": 2.5,
+   "provider": "xai",
+   "tiered": true
+  },
+  "grok-4.20-reasoning-gv2": {
+   "cache_read": 0.2,
+   "cache_write": null,
+   "input": 1.25,
+   "output": 2.5,
+   "provider": "xai",
+   "tiered": true
+  },
+  "grok-4.20-reasoning-latest": {
+   "cache_read": 0.2,
+   "cache_write": null,
+   "input": 1.25,
+   "output": 2.5,
+   "provider": "xai",
+   "tiered": true
+  },
+  "grok-4.3": {
+   "cache_read": 0.2,
+   "cache_write": null,
+   "input": 1.25,
+   "output": 2.5,
+   "provider": "xai",
+   "tiered": true
+  },
+  "grok-4.3-latest": {
+   "cache_read": 0.2,
+   "cache_write": null,
+   "input": 1.25,
+   "output": 2.5,
+   "provider": "xai",
+   "tiered": true
+  },
+  "grok-4.5": {
+   "cache_read": 0.3,
+   "cache_write": null,
+   "input": 2.0,
+   "output": 6.0,
+   "provider": "xai",
+   "tiered": true
+  },
+  "grok-4.5-latest": {
+   "cache_read": 0.3,
+   "cache_write": null,
+   "input": 2.0,
+   "output": 6.0,
+   "provider": "xai",
+   "tiered": true
+  },
+  "grok-4.6": {
+   "cache_read": 0.5,
+   "cache_write": null,
+   "input": 2.0,
+   "output": 6.0,
+   "provider": "xai",
+   "tiered": true
+  },
+  "grok-4.7": {
+   "cache_read": 0.5,
+   "cache_write": null,
+   "input": 2.0,
+   "output": 6.0,
+   "provider": "xai",
+   "tiered": true
+  },
+  "grok-build-0.1": {
+   "cache_read": 0.2,
+   "cache_write": null,
+   "input": 1.0,
+   "output": 2.0,
+   "provider": "xai",
+   "tiered": true
+  },
+  "grok-build-latest": {
+   "cache_read": 0.3,
+   "cache_write": null,
+   "input": 2.0,
+   "output": 6.0,
+   "provider": "xai",
+   "tiered": true
+  },
+  "grok-code-fast": {
+   "cache_read": 0.2,
+   "cache_write": null,
+   "input": 1.0,
+   "output": 2.0,
+   "provider": "xai",
+   "tiered": true
+  },
+  "grok-code-fast-1": {
+   "cache_read": 0.2,
+   "cache_write": null,
+   "input": 1.0,
+   "output": 2.0,
+   "provider": "xai",
+   "tiered": true
+  },
+  "grok-code-fast-1-0825": {
+   "cache_read": 0.2,
+   "cache_write": null,
+   "input": 1.0,
+   "output": 2.0,
+   "provider": "xai",
+   "tiered": true
+  },
+  "labs-leanstral-1-5": {
+   "cache_read": null,
+   "cache_write": null,
+   "input": 0.0,
+   "output": 0.0,
+   "provider": "mistral",
+   "tiered": false
+  },
+  "labs-leanstral-1-5-1": {
+   "cache_read": null,
+   "cache_write": null,
+   "input": 0.0,
+   "output": 0.0,
+   "provider": "mistral",
+   "tiered": false
+  },
+  "learnlm-1.5-pro-experimental": {
+   "cache_read": null,
+   "cache_write": null,
+   "input": 0,
+   "output": 0,
+   "provider": "gemini",
+   "tiered": false
+  },
+  "lyria-3-clip-preview": {
+   "cache_read": null,
+   "cache_write": null,
+   "input": 0,
+   "output": 0,
+   "provider": "gemini",
+   "tiered": false
+  },
+  "lyria-3-pro-preview": {
+   "cache_read": null,
+   "cache_write": null,
+   "input": 0,
+   "output": 0,
+   "provider": "gemini",
+   "tiered": false
+  },
+  "lyria-3.5": {
+   "cache_read": null,
+   "cache_write": null,
+   "input": 0,
+   "output": 0,
+   "provider": "gemini",
+   "tiered": false
+  },
+  "lyria-3.5-clip-preview": {
+   "cache_read": null,
+   "cache_write": null,
+   "input": 0,
+   "output": 0,
+   "provider": "gemini",
+   "tiered": false
+  },
+  "lyria-3.5-pro-preview": {
+   "cache_read": null,
+   "cache_write": null,
+   "input": 0,
+   "output": 0,
+   "provider": "gemini",
+   "tiered": false
+  },
+  "lyria-realtime-exp": {
+   "cache_read": null,
+   "cache_write": null,
+   "input": 0,
+   "output": 0,
+   "provider": "gemini",
+   "tiered": false
+  },
+  "magistral-medium-latest": {
+   "cache_read": 0.15,
+   "cache_write": null,
+   "input": 1.5,
+   "output": 7.5,
+   "provider": "mistral",
+   "tiered": false
+  },
+  "magistral-small-latest": {
+   "cache_read": 0.015,
+   "cache_write": null,
+   "input": 0.15,
+   "output": 0.6,
+   "provider": "mistral",
+   "tiered": false
+  },
+  "ministral-14b-2512": {
+   "cache_read": 0.02,
+   "cache_write": null,
+   "input": 0.2,
+   "output": 0.2,
+   "provider": "mistral",
+   "tiered": false
+  },
+  "ministral-14b-latest": {
+   "cache_read": 0.02,
+   "cache_write": null,
+   "input": 0.2,
+   "output": 0.2,
+   "provider": "mistral",
+   "tiered": false
+  },
+  "ministral-3-14b-2512": {
+   "cache_read": 0.02,
+   "cache_write": null,
+   "input": 0.2,
+   "output": 0.2,
+   "provider": "mistral",
+   "tiered": false
+  },
+  "ministral-3-3b-2512": {
+   "cache_read": 0.01,
+   "cache_write": null,
+   "input": 0.1,
+   "output": 0.1,
+   "provider": "mistral",
+   "tiered": false
+  },
+  "ministral-3-8b-2512": {
+   "cache_read": 0.015,
+   "cache_write": null,
+   "input": 0.15,
+   "output": 0.15,
+   "provider": "mistral",
+   "tiered": false
+  },
+  "ministral-3b-2512": {
+   "cache_read": 0.01,
+   "cache_write": null,
+   "input": 0.1,
+   "output": 0.1,
+   "provider": "mistral",
+   "tiered": false
+  },
+  "ministral-3b-latest": {
+   "cache_read": 0.01,
+   "cache_write": null,
+   "input": 0.1,
+   "output": 0.1,
+   "provider": "mistral",
+   "tiered": false
+  },
+  "ministral-8b-2512": {
+   "cache_read": 0.015,
+   "cache_write": null,
+   "input": 0.15,
+   "output": 0.15,
+   "provider": "mistral",
+   "tiered": false
+  },
+  "ministral-8b-latest": {
+   "cache_read": 0.015,
+   "cache_write": null,
+   "input": 0.15,
+   "output": 0.15,
+   "provider": "mistral",
+   "tiered": false
+  },
+  "mistral-code-agent-latest": {
+   "cache_read": 0.04,
+   "cache_write": null,
+   "input": 0.4,
+   "output": 2.0,
+   "provider": "mistral",
+   "tiered": false
+  },
+  "mistral-code-fim-latest": {
+   "cache_read": 0.03,
+   "cache_write": null,
+   "input": 0.3,
+   "output": 0.9,
+   "provider": "mistral",
+   "tiered": false
+  },
+  "mistral-code-latest": {
+   "cache_read": 0.03,
+   "cache_write": null,
+   "input": 0.3,
+   "output": 0.9,
+   "provider": "mistral",
+   "tiered": false
+  },
+  "mistral-large-2512": {
+   "cache_read": 0.05,
+   "cache_write": null,
+   "input": 0.5,
+   "output": 1.5,
+   "provider": "mistral",
+   "tiered": false
+  },
+  "mistral-large-3": {
+   "cache_read": 0.05,
+   "cache_write": null,
+   "input": 0.5,
+   "output": 1.5,
+   "provider": "mistral",
+   "tiered": false
+  },
+  "mistral-large-4": {
+   "cache_read": 0.068,
+   "cache_write": null,
+   "input": 0.68,
+   "output": 2.09,
+   "provider": "mistral",
+   "tiered": false
+  },
+  "mistral-large-4-0": {
+   "cache_read": 0.068,
+   "cache_write": null,
+   "input": 0.68,
+   "output": 2.09,
+   "provider": "mistral",
+   "tiered": false
+  },
+  "mistral-large-latest": {
+   "cache_read": 0.05,
+   "cache_write": null,
+   "input": 0.5,
+   "output": 1.5,
+   "provider": "mistral",
+   "tiered": false
+  },
+  "mistral-medium": {
+   "cache_read": 0.15,
+   "cache_write": null,
+   "input": 1.5,
+   "output": 7.5,
+   "provider": "mistral",
+   "tiered": false
+  },
+  "mistral-medium-2604": {
+   "cache_read": 0.15,
+   "cache_write": null,
+   "input": 1.5,
+   "output": 7.5,
+   "provider": "mistral",
+   "tiered": false
+  },
+  "mistral-medium-3": {
+   "cache_read": 0.15,
+   "cache_write": null,
+   "input": 1.5,
+   "output": 7.5,
+   "provider": "mistral",
+   "tiered": false
+  },
+  "mistral-medium-3-5": {
+   "cache_read": 0.15,
+   "cache_write": null,
+   "input": 1.5,
+   "output": 7.5,
+   "provider": "mistral",
+   "tiered": false
+  },
+  "mistral-medium-3.5": {
+   "cache_read": 0.15,
+   "cache_write": null,
+   "input": 1.5,
+   "output": 7.5,
+   "provider": "mistral",
+   "tiered": false
+  },
+  "mistral-medium-latest": {
+   "cache_read": 0.15,
+   "cache_write": null,
+   "input": 1.5,
+   "output": 7.5,
+   "provider": "mistral",
+   "tiered": false
+  },
+  "mistral-small": {
+   "cache_read": 0.01,
+   "cache_write": null,
+   "input": 0.1,
+   "output": 0.3,
+   "provider": "mistral",
+   "tiered": false
+  },
+  "mistral-small-2603": {
+   "cache_read": 0.015,
+   "cache_write": null,
+   "input": 0.15,
+   "output": 0.6,
+   "provider": "mistral",
+   "tiered": false
+  },
+  "mistral-small-latest": {
+   "cache_read": 0.015,
+   "cache_write": null,
+   "input": 0.15,
+   "output": 0.6,
+   "provider": "mistral",
+   "tiered": false
+  },
+  "mistral-tiny": {
+   "cache_read": 0.025,
+   "cache_write": null,
+   "input": 0.25,
+   "output": 0.25,
+   "provider": "mistral",
+   "tiered": false
+  },
+  "mistral-vibe-cli-fast": {
+   "cache_read": 0.015,
+   "cache_write": null,
+   "input": 0.15,
+   "output": 0.6,
+   "provider": "mistral",
+   "tiered": false
+  },
+  "mistral-vibe-cli-latest": {
+   "cache_read": 0.15,
+   "cache_write": null,
+   "input": 1.5,
+   "output": 7.5,
+   "provider": "mistral",
+   "tiered": false
+  },
+  "mistral-vibe-cli-with-tools": {
+   "cache_read": 0.15,
+   "cache_write": null,
+   "input": 1.5,
+   "output": 7.5,
+   "provider": "mistral",
+   "tiered": false
+  },
+  "o1": {
+   "cache_read": 7.5,
+   "cache_write": null,
+   "input": 15.0,
+   "output": 60.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "o1-2024-12-17": {
+   "cache_read": 7.5,
+   "cache_write": null,
+   "input": 15.0,
+   "output": 60.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "o3": {
+   "cache_read": 0.5,
+   "cache_write": null,
+   "input": 2.0,
+   "output": 8.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "o3-2025-04-16": {
+   "cache_read": 0.5,
+   "cache_write": null,
+   "input": 2.0,
+   "output": 8.0,
+   "provider": "openai",
+   "tiered": false
+  },
+  "o3-mini": {
+   "cache_read": 0.55,
+   "cache_write": null,
+   "input": 1.1,
+   "output": 4.4,
+   "provider": "openai",
+   "tiered": false
+  },
+  "o3-mini-2025-01-31": {
+   "cache_read": 0.55,
+   "cache_write": null,
+   "input": 1.1,
+   "output": 4.4,
+   "provider": "openai",
+   "tiered": false
+  },
+  "o4-mini": {
+   "cache_read": 0.275,
+   "cache_write": null,
+   "input": 1.1,
+   "output": 4.4,
+   "provider": "openai",
+   "tiered": false
+  },
+  "o4-mini-2025-04-16": {
+   "cache_read": 0.275,
+   "cache_write": null,
+   "input": 1.1,
+   "output": 4.4,
+   "provider": "openai",
+   "tiered": false
+  },
+  "open-mistral-nemo": {
+   "cache_read": 0.03,
+   "cache_write": null,
+   "input": 0.3,
+   "output": 0.3,
+   "provider": "mistral",
+   "tiered": false
+  },
+  "pixtral-large-latest": {
+   "cache_read": 0.2,
+   "cache_write": null,
+   "input": 2.0,
+   "output": 6.0,
+   "provider": "mistral",
+   "tiered": false
+  },
+  "voxtral-small-2507": {
+   "cache_read": 0.01,
+   "cache_write": null,
+   "input": 0.1,
+   "output": 0.4,
+   "provider": "mistral",
+   "tiered": false
+  },
+  "voxtral-small-latest": {
+   "cache_read": 0.01,
+   "cache_write": null,
+   "input": 0.1,
+   "output": 0.4,
+   "provider": "mistral",
+   "tiered": false
+  },
+  "zai-glm-5": {
+   "cache_read": 0.14,
+   "cache_write": null,
+   "input": 1.4,
+   "output": 4.4,
+   "provider": "mistral",
+   "tiered": false
+  },
+  "zai-glm-5-2": {
+   "cache_read": 0.14,
+   "cache_write": null,
+   "input": 1.4,
+   "output": 4.4,
+   "provider": "mistral",
+   "tiered": false
+  },
+  "zai-glm-5-3": {
+   "cache_read": 0.14,
+   "cache_write": null,
+   "input": 1.4,
+   "output": 4.4,
+   "provider": "mistral",
+   "tiered": false
+  },
+  "zai-glm-latest": {
+   "cache_read": 0.14,
+   "cache_write": null,
+   "input": 1.4,
+   "output": 4.4,
+   "provider": "mistral",
+   "tiered": false
+  }
+ }
+}
