@@ -22,6 +22,20 @@ tuner init                    # config, Cursor hooks, /tuner skill, schedule
 command is `tuner`.) `tuner init` is explicit and reversible with
 `tuner uninstall`; skip pieces with `--no-hooks --no-skill --no-schedule`.
 
+## Upgrade
+
+```sh
+tuner upgrade        # upgrade the package, then refresh what Tuner installed
+```
+
+`tuner upgrade` detects how Tuner was installed (`uv tool`, `pipx`, or a
+local checkout), upgrades it, then runs the *new* code to apply database
+migrations and refresh the Cursor hooks, the `/tuner` skill, and the
+schedule, but only the ones you already have. After a manual upgrade run
+`tuner upgrade --sync-only`; `tuner doctor` warns when they are out of sync.
+On Windows `uv` cannot replace a running `tuner.exe`, so `tuner upgrade`
+prints the two commands to run instead.
+
 ## Use
 
 ```sh

@@ -51,12 +51,18 @@ def _plan(conn, cfg, args):
 def _status(conn, plan, args) -> int:
     """Report cache state; never claims an analysis ran when it did not."""
     state = store.status(conn, plan.period_id, plan.key)
+    have = store.current_file(plan.period_id)
+    prior = json.loads(have.read_text("utf-8")).get("coverage") \
+        if state == "stale" and have.exists() else None
     info = {"period": plan.period_id, "status": state,
             "cache_key": plan.key, "tasks_selected": len(plan.selection),
             "analysis_file": str(store.current_file(plan.period_id))
             if state == "valid" else None,
             "next": {"valid": "reuse cached analysis (tuner analyze show)",
-                     "stale": "inputs changed; re-run /tuner analysis",
+                     "stale": "an analysis exists for a different "
+                     f"selection/inputs ({prior['analyzed']} task(s)); "
+                     "re-run /tuner to cover these" if prior else
+                     "inputs changed; re-run /tuner analysis",
                      "missing": "not analyzed; run /tuner in your agent"
                      }[state]}
     if args.json:
@@ -77,11 +83,13 @@ def _save(conn, cfg, plan, args) -> int:
         raw = json.loads(text)
     except ValueError as exc:
         raise TunerError(f"analysis is not valid JSON: {exc}") from exc
-    if isinstance(raw, dict) and raw.get("cache_key") not in (None,
-                                                              plan.key):
-        raise TunerError("analysis was produced for different inputs "
-                         "(cache_key mismatch); rerun `tuner analyze "
-                         "evidence` and analyse again")
+    claimed = raw.get("cache_key") if isinstance(raw, dict) else None
+    if claimed not in (None, plan.key):
+        plan = service.plan_for_key(conn, cfg, plan, claimed)
+        if plan is None:
+            raise TunerError("analysis was produced for different inputs "
+                             "(cache_key mismatch); rerun `tuner analyze "
+                             "evidence` and analyse again")
     producer = {"agent": args.agent, "model": args.model}
     try:
         analysis, warnings = service.save_analysis(conn, cfg, plan, raw,

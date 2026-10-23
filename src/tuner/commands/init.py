@@ -52,10 +52,14 @@ def run(args) -> int:
     if not args.no_schedule:
         from tuner.commands.schedule import install_job
         _step("schedule", lambda: install_job(cfg))
+    from tuner.integrations.sync import mark_synced
+    mark_synced(open_db())
     if not args.no_collect:
         from tuner.commands.collect import run_collect
         stats = run_collect(quiet=True)
-        print(f"  ok    first collection: {stats}")
+        print(f"  ok    first collection: {stats.parsed} file(s), "
+              f"{stats.tasks_written} task(s), {stats.failed} failed, "
+              f"{stats.seconds:.1f}s")
     print("Next: `tuner report --open`, then run /tuner in your agent. "
           "Undo everything with `tuner uninstall`.")
     return 0

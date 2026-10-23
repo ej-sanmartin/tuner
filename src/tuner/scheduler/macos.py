@@ -37,7 +37,6 @@ def render_plist(spec: Spec, argv: list[str], log_dir: Path) -> bytes:
         "ProgramArguments": [*argv, "schedule", "run"],
         "StartCalendarInterval": cal,
         "RunAtLoad": True,
-        "ProcessType": "Background",
         "LowPriorityIO": True,
         "StandardOutPath": str(log_dir / "schedule.out.log"),
         "StandardErrorPath": str(log_dir / "schedule.err.log"),

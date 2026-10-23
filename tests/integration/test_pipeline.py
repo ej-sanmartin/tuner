@@ -10,6 +10,8 @@ from tuner.collectors import build_collectors
 from tuner.reports.periods import Period
 from tuner.reports.snapshot import build_snapshot
 
+U8 = "utf-8"
+
 CUR = "cursor:22222222-aaaa-bbbb-cccc-000000000002"
 
 
@@ -46,7 +48,7 @@ def test_changed_file_is_reparsed_without_duplicates(env, conn):
     files = build_claude(env)
     run(conn)
     before = counts(conn)
-    with open(files["main"], "a", encoding="utf-8") as fh:
+    with open(files["main"], "a", encoding=U8) as fh:
         fh.write("\n")  # fingerprint changes, content equal
     stats = run(conn)
     assert stats.parsed == 1
@@ -59,7 +61,7 @@ def test_resumed_session_replay_not_double_counted(env, conn):
     base = conn.execute("SELECT SUM(output_tokens) FROM usage_events"
                         ).fetchone()[0]
     replay = files["main"].with_name("replayed-session.jsonl")
-    replay.write_text(files["main"].read_text(), encoding="utf-8")
+    replay.write_text(files["main"].read_text(U8), U8)
     run(conn)
     after = conn.execute("SELECT SUM(output_tokens) FROM usage_events"
                          ).fetchone()[0]

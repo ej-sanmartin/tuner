@@ -5,6 +5,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+U8 = "utf-8"
+
 SID = "11111111-aaaa-bbbb-cccc-000000000001"
 CWD = "/work/demo-repo"
 
@@ -13,7 +15,7 @@ def _w(path: Path, lines: list) -> Path:
     """Write JSONL (strings are written verbatim, e.g. malformed)."""
     path.parent.mkdir(parents=True, exist_ok=True)
     out = [ln if isinstance(ln, str) else json.dumps(ln) for ln in lines]
-    path.write_text("\n".join(out) + "\n", encoding="utf-8")
+    path.write_text("\n".join(out) + "\n", U8)
     return path
 
 

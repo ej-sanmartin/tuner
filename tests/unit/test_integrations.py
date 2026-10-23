@@ -10,29 +10,31 @@ from tuner.integrations import cursor_hooks, skill_install
 from tuner.reports.html import safe_json
 from tuner.security.redact import redact
 
+U8 = "utf-8"
+
 
 def test_hooks_install_is_idempotent_and_preserves_user_hooks(tmp_path):
     path = tmp_path / "hooks.json"
     path.write_text(json.dumps({"version": 1, "extra": 1, "hooks": {
-        "stop": [{"command": "./mine.sh"}]}}))
+        "stop": [{"command": "./mine.sh"}]}}), U8)
     cursor_hooks.install(path)
     cursor_hooks.install(path)
-    data = json.loads(path.read_text())
+    data = json.loads(path.read_text(U8))
     assert data["extra"] == 1
     assert len(data["hooks"]["stop"]) == 2  # mine + ours, never duplicated
     assert {"command": "./mine.sh"} in data["hooks"]["stop"]
     cursor_hooks.uninstall(path)
-    data = json.loads(path.read_text())
+    data = json.loads(path.read_text(U8))
     assert data["hooks"] == {"stop": [{"command": "./mine.sh"}]}
     assert cursor_hooks.installed_events(path) == []
 
 
 def test_hooks_refuse_to_modify_invalid_json(tmp_path):
     path = tmp_path / "hooks.json"
-    path.write_text("{not json")
+    path.write_text("{not json", U8)
     with pytest.raises(cursor_hooks.HooksError):
         cursor_hooks.install(path)
-    assert path.read_text() == "{not json"
+    assert path.read_text(U8) == "{not json"
 
 
 def test_hook_spools_allowlisted_fields_and_fails_open(env):
@@ -42,7 +44,7 @@ def test_hook_spools_allowlisted_fields_and_fails_open(env):
     assert hook_spool.run_hook("beforeSubmitPrompt", json.dumps(payload),
                                out) == 0
     assert json.loads(out.getvalue()) == {"continue": True}
-    raw = hook_spool.spool_file().read_text()
+    raw = hook_spool.spool_file().read_text(U8)
     assert "SECRET" not in raw and "sk-" not in raw
     assert json.loads(raw)["prompt_chars"] == len("SECRET PROMPT TEXT")
     bad = io.StringIO()
@@ -57,7 +59,7 @@ def test_skill_install_roundtrip_and_never_overwrites_unmanaged(env):
     assert skill_install.uninstall() and not dest.exists()
     dest.mkdir(parents=True)
     (dest / "SKILL.md").write_text("---\nname: tuner\ndescription: mine\n"
-                                   "---\nbody\n")
+                                   "---\nbody\n", U8)
     with pytest.raises(FileExistsError):
         skill_install.install()
     assert not skill_install.uninstall()
@@ -67,9 +69,9 @@ def test_skill_install_roundtrip_and_never_overwrites_unmanaged(env):
 def test_config_set_preserves_comments_and_validates(env):
     config.write_default()
     path = config.paths.config_file()
-    path.write_text("# my note\n" + path.read_text())
+    path.write_text("# my note\n" + path.read_text(U8), U8)
     config.set_value("report", "top_n", "7")
-    text = path.read_text()
+    text = path.read_text(U8)
     assert text.startswith("# my note") and config.load().report.top_n == 7
     with pytest.raises(config.ConfigError):
         config.set_value("report", "top_n", "banana")

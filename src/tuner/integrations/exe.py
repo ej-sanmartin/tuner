@@ -11,10 +11,10 @@ def tuner_argv() -> list[str]:
     """argv prefix that runs this Tuner install (absolute paths)."""
     found = shutil.which("tuner")
     if found:
-        return [str(Path(found).resolve())]
+        return [str(Path(found).absolute())]
     argv0 = Path(sys.argv[0])
     if argv0.stem.lower().startswith("tuner") and argv0.exists():
-        return [str(argv0.resolve())]
+        return [str(argv0.absolute())]
     return [sys.executable, "-m", "tuner"]
 
 

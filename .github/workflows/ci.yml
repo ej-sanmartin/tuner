@@ -24,6 +24,8 @@ jobs:
       - run: uv sync --locked
       - run: uv run ruff check src tests
       - run: uv run pytest
+        env:
+          PYTHONWARNDEFAULTENCODING: "1"
       - name: Build and smoke-test the wheel
         shell: bash
         run: |

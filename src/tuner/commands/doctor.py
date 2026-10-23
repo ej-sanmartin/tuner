@@ -43,6 +43,21 @@ def checks() -> list[dict]:
     last = repo.kv_get(conn, "last_collect")
     add("last collection", OK if last else WARN, last or "never; run "
         "`tuner collect`")
+    from tuner.integrations.sync import needs_sync
+    old = needs_sync(conn)
+    add("integrations", OK if old is None else WARN,
+        "in sync" if old is None else f"last synced by {old}; "
+        "run `tuner upgrade --sync-only`")
+    from tuner.commands.upgrade import install_method
+    kind, where = install_method()
+    protected = [str(paths.user_home() / d) for d in
+                 ("Documents", "Desktop", "Downloads")]
+    risky = (sys.platform == "darwin" and kind.startswith("editable")
+             and where.startswith(tuple(protected)))
+    add("install", WARN if risky else OK, f"{kind}: {where}" + (
+        "; launchd cannot read protected folders, so the scheduled job "
+        "would hang. Reinstall non-editable: `uv tool install --force "
+        "--reinstall <dir>`" if risky else ""))
     errs = conn.execute("SELECT COUNT(*) FROM collection_errors").fetchone()[0]
     add("collection errors", OK if not errs else WARN, str(errs))
     for c in build_collectors(cfg):

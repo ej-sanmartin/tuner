@@ -17,6 +17,8 @@ from tuner.reports.periods import Period
 from tuner.skills import frontmatter, lifecycle, placement
 from tuner.skills.validate import validate_skill
 
+U8 = "utf-8"
+
 GOOD = """---
 name: fix-tests
 description: Run and fix failing parser tests quickly. Use for test failures.
@@ -72,7 +74,7 @@ def test_cache_key_changes_only_with_relevant_inputs(env, conn):
                           config.load()) != plan.key
     # pricing overrides are part of the key
     from tuner import paths
-    (paths.config_dir() / "pricing_overrides.toml").write_text("# new\n")
+    (paths.config_dir() / "pricing_overrides.toml").write_text("# new\n", U8)
     assert keys.pricing_version(plan.usage) != keys.pricing_version(
         {"pricing": {"meta": {"x": 1}}})
 
@@ -83,7 +85,7 @@ def test_analysis_save_cache_and_invalidation(env, conn):
     service.save_analysis(conn, cfg, plan, analysis_doc(plan, False),
                           {"agent": "test"})
     assert store.status(conn, plan.period_id, plan.key) == "valid"
-    html = (plan.directory / "report.html").read_text()
+    html = (plan.directory / "report.html").read_text(U8)
     assert "Add a test-fix skill" in html
     store.invalidate(conn, plan.period_id)
     assert store.status(conn, plan.period_id, plan.key) == "stale"
@@ -148,7 +150,7 @@ def test_review_apply_backup_conflict_and_rollback(env, conn):
     assert rec["status"] == "proposed" and not target.exists()
     assert target == env / ".claude/skills/fix-tests/SKILL.md"
     lifecycle.apply(conn, rec["change_id"])
-    info = frontmatter.parse(target.read_text())[0]
+    info = frontmatter.parse(target.read_text(U8))[0]
     assert info["metadata"]["tuner-managed"] == "true"
     lifecycle.rollback(conn, rec["change_id"])
     assert not target.exists()
@@ -162,10 +164,10 @@ def test_review_apply_backup_conflict_and_rollback(env, conn):
     p2 = lifecycle.propose(conn, cfg2, {"name": "fix-tests", "content": v2,
                                         "scope": "global"}, {"repos": []})
     assert p2.action == "update" and p2.status == "proposed"
-    target.write_text(target.read_text() + "\nuser edit\n")  # conflict
+    target.write_text(target.read_text(U8) + "\nuser edit\n", U8)
     with pytest.raises(lifecycle.SkillError, match="conflict"):
         lifecycle.apply(conn, p2.id)
-    assert "user edit" in target.read_text()
+    assert "user edit" in target.read_text(U8)
 
 
 def test_update_rollback_restores_backup_and_detects_user_edits(env, conn):
@@ -174,33 +176,33 @@ def test_update_rollback_restores_backup_and_detects_user_edits(env, conn):
     p1 = lifecycle.propose(conn, cfg, spec, {"repos": []})
     lifecycle.apply(conn, p1.id)
     target = p1.path
-    original = target.read_text()
+    original = target.read_text(U8)
     p2 = lifecycle.propose(conn, cfg, {**spec, "content": GOOD + "\nmore\n"},
                            {"repos": []})
     lifecycle.apply(conn, p2.id)
-    assert "more" in target.read_text()
-    target.write_text(target.read_text() + "\nuser edit\n")
+    assert "more" in target.read_text(U8)
+    target.write_text(target.read_text(U8) + "\nuser edit\n", U8)
     with pytest.raises(lifecycle.SkillError, match="edited"):
         lifecycle.rollback(conn, p2.id)
     lifecycle.rollback(conn, p2.id, force=True)
-    assert "more" not in target.read_text()
-    assert frontmatter.parse(target.read_text())[0]["name"] == "fix-tests"
+    assert "more" not in target.read_text(U8)
+    assert frontmatter.parse(target.read_text(U8))[0]["name"] == "fix-tests"
     assert original.split("tuner-change")[0] == \
-        target.read_text().split("tuner-change")[0]
+        target.read_text(U8).split("tuner-change")[0]
 
 
 def test_unmanaged_skills_are_never_modified(env, conn):
     cfg, _ = setup_plan(env, conn)
     mine = env / ".claude/skills/fix-tests"
     mine.mkdir(parents=True)
-    (mine / "SKILL.md").write_text(GOOD)
+    (mine / "SKILL.md").write_text(GOOD, U8)
     p = lifecycle.propose(conn, cfg, {"name": "fix-tests", "scope": "global",
                                       "content": GOOD + "\nx\n"},
                           {"repos": []})
     assert p.status == "manual"
     with pytest.raises(lifecycle.SkillError):
         lifecycle.apply(conn, p.id)
-    assert (mine / "SKILL.md").read_text() == GOOD
+    assert (mine / "SKILL.md").read_text(U8) == GOOD
 
 
 def test_auto_mode_applies_only_safe_changes(env, conn):
@@ -276,3 +278,11 @@ def test_pricing_refresh_needs_explicit_network_consent(env):
     from tuner.commands.common import TunerError
     with pytest.raises(TunerError, match="local_only"):
         pricing.run(SimpleNamespace(action="refresh", allow_network=False))
+
+
+def test_save_finds_selection_from_cache_key(env, conn):
+    cfg, plan = setup_plan(env, conn)
+    one = service.plan_for_key(conn, cfg, plan, keys.cache_key(
+        plan.snapshot_hash, plan.selection[:1], plan.usage, cfg))
+    assert one is not None and one.selection == plan.selection[:1]
+    assert service.plan_for_key(conn, cfg, plan, "bogus") is None

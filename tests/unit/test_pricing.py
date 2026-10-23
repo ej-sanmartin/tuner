@@ -40,7 +40,8 @@ def test_dated_override_wins_by_effective_date(env):
         '[[model]]\nid="claude-sonnet-4-5"\nprovider="anthropic"\n'
         'input=1.0\noutput=2.0\neffective_from="2026-01-01"\n'
         '[[model]]\nid="claude-sonnet-4-5"\nprovider="anthropic"\n'
-        'input=9.0\noutput=9.0\neffective_from="2026-06-01"\n')
+        'input=9.0\noutput=9.0\neffective_from="2026-06-01"\n',
+        encoding="utf-8")
     book = PriceBook()
     assert book.lookup("claude-sonnet-4-5", "2026-03-01").input == 1.0
     assert book.lookup("claude-sonnet-4-5", "2026-07-01").input == 9.0

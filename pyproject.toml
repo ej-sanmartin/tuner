@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "agent-tuner"
-version = "0.1.0"
+dynamic = ["version"]
 description = "Understand your AI usage. Tune your agent workflows."
 readme = "README.md"
 license = { text = "MIT" }
@@ -29,6 +29,9 @@ tuner = "tuner.cli:main"
 [dependency-groups]
 dev = ["pytest>=8", "ruff>=0.6"]
 
+[tool.hatch.version]
+path = "src/tuner/__init__.py"
+
 [tool.hatch.build.targets.wheel]
 packages = ["src/tuner"]
 
@@ -38,6 +41,9 @@ packages = ["src/tuner"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-q"
+# With PYTHONWARNDEFAULTENCODING=1 (set in CI) any open() without an
+# explicit encoding fails, catching Windows cp1252 bugs on every OS.
+filterwarnings = ["error::EncodingWarning"]
 
 [tool.ruff]
 line-length = 80

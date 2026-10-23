@@ -51,6 +51,20 @@ def make_plan(conn: sqlite3.Connection, cfg: Config, directory: Path,
                 key)
 
 
+def plan_for_key(conn: sqlite3.Connection, cfg: Config, plan: Plan,
+                 key: str) -> Plan | None:
+    """Plan whose top-N selection produced `key` (None if no match).
+
+    Lets `save` work without repeating `--top` from the evidence step.
+    """
+    for n in range(1, len(plan.usage["tasks"]) + 1):
+        sel = keys.task_selection(plan.usage, n, None)
+        if keys.cache_key(plan.snapshot_hash, sel, plan.usage, cfg) == key:
+            return Plan(plan.period_id, plan.directory, plan.usage,
+                        plan.snapshot_hash, sel, key)
+    return None
+
+
 def bundle(conn: sqlite3.Connection, cfg: Config, plan: Plan) -> dict:
     """Redacted evidence for the planned tasks."""
     return evidence.build_bundle(conn, cfg, plan.usage, plan.snapshot_hash,

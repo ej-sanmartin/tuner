@@ -1,6 +1,7 @@
 # Progress
 
-Last updated 2026-10-22. 56 automated tests pass on macOS; ruff is clean.
+Last updated 2026-10-23. 66 automated tests pass on macOS (strict
+encoding mode); ruff is clean.
 
 ## Done
 
@@ -13,22 +14,39 @@ Last updated 2026-10-22. 56 automated tests pass on macOS; ruff is clean.
 | 5 Skills | Discovery, placement, validation, propose/apply/reject/rollback, backups, conflicts, managed-only writes, modes, effectiveness | Done; covered by tests |
 | 6 Quality | Tests for every listed area, CI workflow, docs, README | Done except as noted |
 
-## Not verified (be skeptical here)
+## Verified on a real machine (macOS, 2026-10-23)
 
-* **Windows**: nothing has run on Windows. The Task Scheduler XML is
-  parsed in tests but `schtasks` was never invoked; toast notifications,
-  `msvcrt` locking, and path handling are untested. CI is configured for
-  `windows-latest` but has not run yet; expect first-run fixes.
-* **Real OS scheduler on macOS**: tests and experiments run with
-  `TUNER_FAKE_HOME`, which deliberately skips `launchctl`. `tuner schedule
-  install` against real launchd has not been run on this machine.
-* **Real Cursor hooks**: install/uninstall is tested against temp files; it
-  has not modified the real `~/.cursor/hooks.json`.
-* **`/tuner` inside Cursor/Claude Code**: the skill text is written and the
-  CLI contract is tested, but no live agent has followed it yet. Expect
-  wording tweaks after the first real run.
-* **Published package**: `uv build` works and the wheel contains the skill,
-  templates, and price snapshot; it has not been uploaded to PyPI.
+* `tuner init` (hooks, skill, collection) and `tuner schedule install`
+  against the real home; the RunAtLoad launchd run generated four
+  catch-up reports.
+* `tuner upgrade` end to end, both in an isolated rehearsal (0.1.0 ->
+  0.1.1 via local wheels) and on the real install (local checkout).
+* A hand-written `/tuner`-style analysis saved and cached on real data.
+
+## Not verified / open gaps (be skeptical here)
+
+* **launchd calendar trigger did not fire.** Twice (00:34, 00:39) the
+  daily `StartCalendarInterval` passed with no run (`runs` stayed 1).
+  Cause unknown (the second attempt also dropped `ProcessType
+  Background`). RunAtLoad/catch-up works, so reports still appear at
+  login, but timer precision is unproven. Needs a probe job to separate a
+  machine issue from a plist issue.
+* **macOS privacy (TCC):** an editable install under `~/Documents` made the
+  scheduled job hang while Python started. `tuner doctor` now warns;
+  use a non-editable install for the schedule.
+* **PATH:** `uv tool` installs to `~/.local/bin`, which may not be on PATH
+  (`uv tool update-shell`). Hooks and launchd use absolute paths, so they
+  still work.
+* **Windows**: nothing has run on Windows locally. CI found one real bug
+  (UTF-8 vs cp1252 in tests), now guarded by strict encoding warnings.
+  `schtasks`, toasts, `msvcrt` locking, and `tuner upgrade` on Windows
+  (which prints manual steps because `tuner.exe` is locked) are untested.
+* **`/tuner` in a live agent loop:** the analysis was driven by hand
+  following the skill's steps, which exposed and fixed a `save`/`--top`
+  mismatch. Evidence for one large task is ~50 KB, so analyzing many
+  tasks is token-heavy; consider a compact mode.
+* Published package: nothing uploaded to PyPI, so `tuner upgrade` for PyPI
+  installs is only tested against local wheels.
 
 ## Known limitations
 
