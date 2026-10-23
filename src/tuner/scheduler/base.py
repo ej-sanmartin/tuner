@@ -10,6 +10,10 @@ from typing import Protocol
 from tuner.config import DAYS
 from tuner.reports import periods
 
+# The OS also pings `schedule run` this often. It is idempotent and cheap,
+# and covers calendar triggers that never fire (observed on macOS).
+CHECK_INTERVAL_S = 3600
+
 
 @dataclass(frozen=True)
 class Spec:

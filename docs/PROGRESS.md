@@ -25,12 +25,13 @@ encoding mode); ruff is clean.
 
 ## Not verified / open gaps (be skeptical here)
 
-* **launchd calendar trigger did not fire.** Twice (00:34, 00:39) the
-  daily `StartCalendarInterval` passed with no run (`runs` stayed 1).
-  Cause unknown (the second attempt also dropped `ProcessType
-  Background`). RunAtLoad/catch-up works, so reports still appear at
-  login, but timer precision is unproven. Needs a probe job to separate a
-  machine issue from a plist issue.
+* **launchd calendar trigger does not fire on the dev Mac** (even a bare
+  probe job). Mitigated, not fixed: the job also has an hourly
+  `StartInterval` (verified to fire here: a 60 s trial gave runs=2 and a
+  fresh heartbeat), and Cursor hooks (`sessionStart/End/stop`) start a
+  detached, throttled `schedule run` when a report is due
+  (`report.run_on_activity`). `doctor` shows the last run and warns about
+  overdue reports. Windows' hourly repetition is XML-validated only.
 * **macOS privacy (TCC):** an editable install under `~/Documents` made the
   scheduled job hang while Python started. `tuner doctor` now warns;
   use a non-editable install for the schedule.

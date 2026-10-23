@@ -1,7 +1,8 @@
 """Windows Task Scheduler integration (schtasks + Task XML).
 
 The XML sets StartWhenAvailable so a missed run executes as soon as the
-PC is back, plus a logon trigger for catch-up after the PC was off.
+PC is back, a logon trigger for catch-up after the PC was off, and an
+hourly repetition as a fallback ping (`schedule run` is idempotent).
 """
 
 from __future__ import annotations
@@ -12,7 +13,8 @@ import tempfile
 from pathlib import Path
 from xml.sax.saxutils import escape
 
-from tuner.scheduler.base import Spec
+from tuner import paths
+from tuner.scheduler.base import CHECK_INTERVAL_S, Spec
 
 TASK = "Tuner\\Report"
 DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday",
@@ -35,6 +37,7 @@ def render_xml(spec: Spec, argv: list[str]) -> str:
     else:
         sched = ("<ScheduleByDay><DaysInterval>1</DaysInterval>"
                  "</ScheduleByDay>")
+    interval = f"PT{CHECK_INTERVAL_S // 3600}H"
     args = " ".join(f'"{a}"' if " " in a else a
                     for a in [*argv[1:], "schedule", "run"])
     return f"""<?xml version="1.0" encoding="UTF-16"?>
@@ -50,6 +53,11 @@ def render_xml(spec: Spec, argv: list[str]) -> str:
       {sched}
     </CalendarTrigger>
     <LogonTrigger><Enabled>true</Enabled></LogonTrigger>
+    <TimeTrigger>
+      <StartBoundary>{start}</StartBoundary>
+      <Repetition><Interval>{interval}</Interval></Repetition>
+      <Enabled>true</Enabled>
+    </TimeTrigger>
   </Triggers>
   <Principals>
     <Principal id="Author">
@@ -78,6 +86,17 @@ def render_xml(spec: Spec, argv: list[str]) -> str:
 def _schtasks(*args: str) -> subprocess.CompletedProcess:
     """Run schtasks, capturing output (skipped under TUNER_FAKE_HOME)."""
     if os.environ.get("TUNER_FAKE_HOME"):  # tests must not touch the OS
+        marker = paths.data_dir() / "fake-schtasks-installed"
+        if args[0] == "/Create":
+            paths.ensure_private_dir(marker.parent)
+            marker.write_text("1", encoding="utf-8")
+        elif args[0] == "/Delete":
+            ok = marker.exists()
+            marker.unlink(missing_ok=True)
+            return subprocess.CompletedProcess(args, 0 if ok else 1, "", "")
+        elif args[0] == "/Query":
+            return subprocess.CompletedProcess(
+                args, 0 if marker.exists() else 1, "", "")
         return subprocess.CompletedProcess(args, 0, "", "")
     return subprocess.run(["schtasks", *args], capture_output=True,
                           text=True, check=False)

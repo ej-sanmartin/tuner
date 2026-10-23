@@ -60,6 +60,7 @@ def test_install_method_detection(monkeypatch, prefix, expected):
 
 
 def test_editable_install_detected(monkeypatch):
+    monkeypatch.setattr(sys, "platform", "darwin")
     monkeypatch.setattr(sys, "prefix", "/x/uv/tools/agent-tuner")
     monkeypatch.setattr(upgrade.md, "distribution", lambda n: type(
         "D", (), {"read_text": lambda self, f: (
@@ -70,6 +71,15 @@ def test_editable_install_detected(monkeypatch):
         "D", (), {"read_text": lambda self, f: (
             '{"url": "file:///src/my%20tuner", "dir_info": {}}')})())
     assert upgrade.install_method() == ("path-uv", "/src/my tuner")
+
+
+def test_windows_drive_path_detected(monkeypatch):
+    monkeypatch.setattr(sys, "platform", "win32")
+    monkeypatch.setattr(sys, "prefix", "C:/x/uv/tools/agent-tuner")
+    monkeypatch.setattr(upgrade.md, "distribution", lambda n: type(
+        "D", (), {"read_text": lambda self, f: (
+            '{"url": "file:///C:/src/tuner", "dir_info": {}}')})())
+    assert upgrade.install_method() == ("path-uv", "C:/src/tuner")
 
 
 def test_upgrade_commands_per_method(monkeypatch):

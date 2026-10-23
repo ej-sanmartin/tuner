@@ -21,6 +21,9 @@ def env(tmp_path, monkeypatch):
     monkeypatch.setenv("TUNER_HOME", str(tmp_path / "tuner"))
     monkeypatch.delenv("CLAUDE_CONFIG_DIR", raising=False)
     monkeypatch.delenv("XDG_CONFIG_HOME", raising=False)
+    from tuner.scheduler import tick
+    tick.spawned = []  # record, never spawn, activity ticks
+    monkeypatch.setattr(tick, "_popen", tick.spawned.append)
     return home
 
 

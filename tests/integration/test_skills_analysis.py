@@ -286,3 +286,17 @@ def test_save_finds_selection_from_cache_key(env, conn):
         plan.snapshot_hash, plan.selection[:1], plan.usage, cfg))
     assert one is not None and one.selection == plan.selection[:1]
     assert service.plan_for_key(conn, cfg, plan, "bogus") is None
+
+
+def test_timeline_compaction_dedupes_paths(env):
+    from tuner.analysis import compact
+    home = str(compact.paths.user_home())
+    long = f"{home}/proj/a/transcript.jsonl"
+    items = [{"id": "T0", "kind": "tool", "ts": None, "error": None,
+              "target": f"{home}/proj/a/x.py", "ref": f"{long}#L{n}"}
+             for n in range(3)]
+    sources, out = compact.compact_timeline(items, f"{home}/proj/a")
+    assert sources == {"f0": long}
+    assert [i["ref"] for i in out] == ["f0#L0", "f0#L1", "f0#L2"]
+    assert out[0]["target"] == "$REPO/x.py"
+    assert "ts" not in out[0] and "error" not in out[0]

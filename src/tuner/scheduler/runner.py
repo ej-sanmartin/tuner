@@ -19,6 +19,8 @@ from tuner.notifications import notify
 from tuner.reports import generate as gen
 from tuner.reports import periods
 from tuner.reports.opener import open_file
+from tuner.scheduler import tick
+from tuner.storage import repo
 from tuner.storage.locking import FileLock, LockBusy
 
 
@@ -58,9 +60,25 @@ def run_due(conn: sqlite3.Connection, cfg: Config,
                 res = gen.generate(conn, cfg, period, now=now)
                 results.append(res)
                 _deliver(cfg, res, notifier, opener)
+            _record(conn, cfg, now, len(results))
             return results
     except LockBusy:
         return []
+
+
+def _record(conn: sqlite3.Connection, cfg: Config, now: datetime,
+            generated: int) -> None:
+    """Heartbeat for `doctor`, and the next time activity should tick."""
+    repo.kv_set(conn, "last_schedule_run", repo.now_iso())
+    repo.kv_set(conn, "last_schedule_generated", str(generated))
+    r = cfg.report
+    if not r.run_on_activity:
+        tick.write_next_due(None)
+        return
+    wall = periods.to_wall(now, r.timezone)
+    nxt = periods.next_trigger(
+        periods.latest_trigger(wall, r.period, r.day, r.time), r.period)
+    tick.write_next_due(periods.to_utc(nxt, r.timezone))
 
 
 def _deliver(cfg: Config, res: gen.ReportResult, notifier, opener) -> None:

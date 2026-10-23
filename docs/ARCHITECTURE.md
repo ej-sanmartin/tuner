@@ -72,8 +72,12 @@ applies only validated, warning-free, small changes to managed targets.
 for `<script>`, DOM built only with `textContent`, CSP blocking network.
 `tuner schedule run` is idempotent (lock + `report_periods`) and does
 collect -> due periods -> generate -> notify. launchd (`StartCalendarInterval`
-+ `RunAtLoad`) and Task Scheduler (`StartWhenAvailable` + logon trigger)
-only call that command, so catch-up works after sleep or downtime. Periods
++ `RunAtLoad` + hourly `StartInterval`) and Task Scheduler
+(`StartWhenAvailable` + logon + hourly repetition) only call that command,
+so catch-up works after sleep or downtime. Cursor hooks are a third,
+timer-independent trigger: `scheduler/tick.py` compares now with a
+`next_due` file and spawns a detached run. Each run writes a heartbeat
+(`last_schedule_run`) that `doctor` checks. Periods
 are computed on wall-clock time in the configured timezone and converted to
 UTC at the edges, which keeps them contiguous across DST.
 

@@ -31,6 +31,7 @@ EXTRA = {
                      "agent_transcript_path"),
 }
 EVENTS = tuple(EXTRA)
+TICK_EVENTS = ("sessionStart", "sessionEnd", "stop")
 RESPONSES = {"beforeSubmitPrompt": {"continue": True}}
 
 
@@ -80,6 +81,12 @@ def run_hook(event: str, stdin_text: str, out=None) -> int:
             append(rec)
     except Exception:
         pass  # fail open: never disturb the agent
+    if event in TICK_EVENTS:
+        try:
+            from tuner.scheduler.tick import maybe_tick
+            maybe_tick()
+        except Exception:
+            pass
     return 0
 
 

@@ -11,7 +11,7 @@ from __future__ import annotations
 import sqlite3
 from pathlib import Path
 
-from tuner.analysis import INSTRUCTIONS_VERSION, excerpts
+from tuner.analysis import INSTRUCTIONS_VERSION, compact, excerpts
 from tuner.config import Config
 from tuner.skills import discover
 
@@ -131,14 +131,16 @@ def task_bundle(conn: sqlite3.Connection, rec: dict,
                                     turns[-1]["source_line"]) \
         if turns and excerpts_on else ""
     root = roots.get(rec["repo"]) if rec["repo"] else None
-    timeline = [{"id": f"T{i}", **t}
-                for i, t in enumerate(rec.get("timeline", []))]
+    items = [{"id": f"T{i}", **t}
+             for i, t in enumerate(rec.get("timeline", []))]
+    sources, timeline = compact.compact_timeline(items, root)
     keep = ("id", "title", "agent", "repo", "rank", "tokens", "models",
             "share_of_total", "quality", "outcome", "turns", "cost",
             "grouping", "tools", "subagents", "compactions")
     out = {k: rec.get(k) for k in keep}
     out.update({"prompts": prompts, "final_response": final,
-                "timeline": timeline, "signals": signals_for(conn, rec),
+                "sources": sources, "timeline": timeline,
+                "signals": signals_for(conn, rec),
                 "available_skills": _skills(skills, root),
                 "project_guidance_files": _guidance(root)})
     return out

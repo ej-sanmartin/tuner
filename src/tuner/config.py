@@ -45,6 +45,7 @@ SCHEMA: dict[str, dict[str, Opt]] = {
         "time": Opt("str", "18:00"),
         "timezone": Opt("str", "local"),
         "catch_up": Opt("bool", True),
+        "run_on_activity": Opt("bool", True),
         "backfill_limit": Opt("int", 4, lo=0, hi=52),
     },
     "sources": {

@@ -1,3 +1,3 @@
 """On-demand, evidence-backed analysis of usage snapshots."""
 
-INSTRUCTIONS_VERSION = "1"
+INSTRUCTIONS_VERSION = "2"

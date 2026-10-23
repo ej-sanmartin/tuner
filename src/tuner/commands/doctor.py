@@ -4,12 +4,15 @@ from __future__ import annotations
 
 import shutil
 import sys
+from datetime import UTC, datetime
 
 from tuner import paths
 from tuner.collectors import build_collectors
 from tuner.commands.common import TunerError, emit_json, load_config, open_db
 from tuner.integrations import cursor_hooks, skill_install
 from tuner.pricing import PriceBook
+from tuner.scheduler import runner
+from tuner.scheduler.base import CHECK_INTERVAL_S
 from tuner.storage import repo
 
 OK, WARN, FAIL = "ok", "warn", "fail"
@@ -78,6 +81,15 @@ def checks() -> list[dict]:
     add("schedule", OK if st.get("installed") else WARN,
         st.get("path") or st.get("note", "not installed; `tuner schedule "
                                          "install`"))
+    now = datetime.now(UTC)
+    late = [p.id for p in runner.due(conn, cfg, now)
+            if (now - p.end).total_seconds() > 2 * CHECK_INTERVAL_S]
+    last = repo.kv_get(conn, "last_schedule_run")
+    add("scheduled runs", WARN if late else OK,
+        f"last run {last or 'never'}" + (
+            f"; {len(late)} report(s) overdue ({late[0]}...): the OS timer "
+            "may not be firing. Run `tuner schedule run` (it also runs at "
+            "login and when Cursor is used)" if late else ""))
     meta = PriceBook().meta
     add("pricing", OK, f"{meta.get('source', 'bundled')} "
         f"{meta.get('fetched_at', '')}")
