@@ -33,9 +33,13 @@ changed source file atomically replaces its rows (`DELETE` by
 `source_path`, `INSERT OR IGNORE`). Change detection is a cheap fingerprint
 (`size:mtime_ns:salt`), so re-runs are no-ops and nothing is double counted.
 `attribution/tasks.py`: a task is one user prompt plus everything the agent
-did for it. Every prompt is its own task (never merged). A prompt may carry
+did for it. Every human prompt is its own task (never merged). Harness
+messages nobody typed (post-compaction summary, empty notification
+wrapper, background-task completion ping) join the previous task as
+`system_turns`, so the workflow that caused them keeps the cost. A prompt may carry
 a `continues` link to the previous task (previous turn interrupted/errored,
-or a short prompt within `idle_gap_minutes`, default 30) with rule and gap;
+or a short affirmation such as "yes ..." within `idle_gap_minutes`,
+default 30) with rule and gap;
 linked tasks share a `thread_id`. Task ids are `task:` + sha1 of the first
 turn id, so they are stable. Changing the grouping rules or config makes
 the next collect regroup everything (`attribution_rules` in `kv`).

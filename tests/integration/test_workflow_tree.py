@@ -79,3 +79,43 @@ def test_interrupted_turn_links_even_a_long_followup():
     assert b.thread_id == a.id
     assert c.continues is None  # short, but 114 minutes later
     assert group_turns("s", rows, False, 80, 30)[1].continues is None
+
+
+def test_harness_messages_join_the_previous_task_as_system_turns():
+    def row(i, preview, chars=500):
+        r = _turn(i, f"2026-10-12T10:0{len(i)}:00Z",
+                  f"2026-10-12T10:0{len(i)}:30Z", chars, "completed")
+        r["prompt_preview"] = preview
+        return r
+
+    rows = [row("a", "refactor the parser"),
+            row("bb", "<available_subagent_types> Available ...", 12499),
+            row("ccc", "<timestamp>Sunday, Oct 25</timestamp>", 40),
+            row("dddd", "Briefly inform the user about the task result"),
+            row("eeeee", "yes add tests", 13)]
+    tasks = group_turns("s", rows, True, 80, 30)
+    assert [t.turn_ids for t in tasks] == [["a", "bb", "ccc", "dddd"],
+                                           ["eeeee"]]
+    assert [s["rule"] for s in tasks[0].system_turns] == [
+        "compaction_summary", "empty_notification", "task_notification"]
+    assert tasks[1].continues["task_id"] == tasks[0].id  # human follow-up
+    lone = group_turns("s", rows[1:2], True, 80, 30)
+    assert len(lone) == 1  # nothing to attach to: keeps its own task
+
+
+def test_only_short_affirmations_are_linked_not_short_new_requests():
+    def row(i, preview, minute):
+        r = _turn(i, f"2026-10-12T10:{minute:02d}:00Z",
+                  f"2026-10-12T10:{minute:02d}:30Z", len(preview),
+                  "completed")
+        r["prompt_preview"] = preview
+        return r
+
+    rows = [row("a", "add a settings page", 0),
+            row("b", "yes on delete", 2),
+            row("c", "git commit message of this first version", 4),
+            row("d", "ok go ahead", 6),
+            row("e", "can you list the biomes", 8)]
+    t = group_turns("s", rows, True, 80, 30)
+    assert [x.continues["rule"] if x.continues else None for x in t] == [
+        None, "affirmation", None, "affirmation", None]

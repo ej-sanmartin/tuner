@@ -164,6 +164,7 @@ function timeline(items) {
   return h("ul", { class: "tl" }, (items || []).map((i) => {
     if (i.kind === "gap") return h("li", { class: "gap" }, `… ${i.omitted} more events omitted …`);
     if (i.kind === "prompt") return h("li", { class: "prompt" }, "Prompt: " + i.text);
+    if (i.kind === "system") return h("li", { class: "gap" }, "System message: " + i.text.replace("_", " "));
     if (i.kind === "tool") return h("li", { class: i.error ? "err" : "" }, `${i.name}${i.target ? " " : ""}`, h("span", { class: "mono" }, i.target || ""), i.error ? " — failed" : "");
     return h("li", {}, i.kind);
   }));

@@ -30,7 +30,8 @@ cache_read` and cost is a plain weighted sum.
 `period`, `selection`, `overview` (tokens, quality, counts, by_agent,
 by_model, cost), `tasks[]` (rank, tokens, models, quality, outcome, tools,
 subagents, compactions, grouping, cost, timeline, sources). `grouping`
-has `continues` ({task_id, rule, gap_minutes} or null) and `thread_id`;
+has `continues` ({task_id, rule, gap_minutes} or null), `thread_id` and
+`system_turns` ([{turn_id, rule}] attached to the task);
 `subagents` has `count`, `tokens`, `own_tokens`, `omitted` and `items[]`
 (type, description, models, tokens, tools, quality, spawning turn),
 `data_quality` (reconciliation, gaps), `pricing.meta`, `privacy` statement.

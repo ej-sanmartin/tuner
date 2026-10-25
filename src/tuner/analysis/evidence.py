@@ -121,16 +121,18 @@ def task_bundle(conn: sqlite3.Connection, rec: dict,
                 skills: list[discover.SkillInfo],
                 roots: dict[str, str], excerpts_on: bool = True) -> dict:
     """Evidence for one task (transcript excerpts only if permitted)."""
-    turns = _turns(conn, rec["id"])
+    all_turns = _turns(conn, rec["id"])
+    system = {t["turn_id"] for t in rec["grouping"].get("system_turns", [])}
+    turns = [t for t in all_turns if t["id"] not in system] or all_turns
     prompts = [{"id": f"P{i}", "outcome": t["outcome"],
                 "chars": t["prompt_chars"],
                 "text": excerpts.prompt_text(t["source_path"],
                                              t["source_line"])
                 if excerpts_on else ""}
                for i, t in enumerate(turns[:MAX_PROMPTS], start=1)]
-    final = excerpts.final_response(turns[-1]["source_path"],
-                                    turns[-1]["source_line"]) \
-        if turns and excerpts_on else ""
+    final = excerpts.final_response(all_turns[-1]["source_path"],
+                                    all_turns[-1]["source_line"]) \
+        if all_turns and excerpts_on else ""
     root = roots.get(rec["repo"]) if rec["repo"] else None
     items = [{"id": f"T{i}", **t}
              for i, t in enumerate(rec.get("timeline", []))]

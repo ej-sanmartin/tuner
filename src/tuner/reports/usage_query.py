@@ -11,6 +11,7 @@ import json
 import sqlite3
 from collections import defaultdict
 
+from tuner.attribution.tasks import synthetic_rule
 from tuner.reports import aggregate as agg
 
 SUMS = ("SUM(u.input_tokens) AS input_tokens, "
@@ -188,8 +189,10 @@ def load_timeline(conn: sqlite3.Connection, task_id: str, cap: int = 80
                  "t.source_path, t.source_line FROM task_turns tt JOIN turns "
                  "t ON t.id = tt.turn_id WHERE tt.task_id=? ORDER BY t.seq")
     for r in conn.execute(sql_turns, (task_id,)):
-        items.append({"kind": "prompt", "ts": r["ts"], "text": r[
-            "prompt_preview"][:160], "outcome": r["outcome"],
+        rule = synthetic_rule(r["prompt_preview"])
+        items.append({"kind": "system" if rule else "prompt", "ts": r["ts"],
+                      "text": rule or r["prompt_preview"][:160],
+                      "outcome": r["outcome"],
             "ref": f"{r['source_path']}#L{r['source_line']}",
             "_ln": r["source_line"]})
     sql_tools = ("SELECT k.ts, k.name, k.target, k.is_error, k.source_path, "

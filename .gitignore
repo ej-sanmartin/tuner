@@ -9,3 +9,4 @@ build/
 .env
 /reports/
 .DS_Store
+/scratch/

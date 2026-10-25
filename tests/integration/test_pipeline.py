@@ -81,7 +81,7 @@ def test_every_prompt_is_a_task_and_followups_are_linked(env, conn):
     # "yes" (short, 5 min later) continues task 1; the 18:00 long prompt
     # starts a new thread
     assert ev[1]["continues"]["task_id"] == rows[0]["id"]
-    assert ev[1]["continues"]["rule"] == "short_followup"
+    assert ev[1]["continues"]["rule"] == "affirmation"
     assert ev[1]["thread_id"] == ev[0]["thread_id"] == rows[0]["id"]
     assert ev[2]["continues"] is None
     assert ev[2]["thread_id"] == rows[2]["id"]
