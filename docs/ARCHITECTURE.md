@@ -32,11 +32,17 @@ SQLite (WAL). `collect.py` takes a cross-platform file lock, then for each
 changed source file atomically replaces its rows (`DELETE` by
 `source_path`, `INSERT OR IGNORE`). Change detection is a cheap fingerprint
 (`size:mtime_ns:salt`), so re-runs are no-ops and nothing is double counted.
-`attribution/tasks.py` groups turns into tasks (each turn is a task unless a
-short follow-up is merged; merges carry evidence and lower confidence).
-Task ids are `task:` + sha1 of the first turn id, so they are stable.
-Subagent usage is attributed through spawn events; reconciliation reports
-what could not be attributed instead of hiding it.
+`attribution/tasks.py`: a task is one user prompt plus everything the agent
+did for it. Every prompt is its own task (never merged). A prompt may carry
+a `continues` link to the previous task (previous turn interrupted/errored,
+or a short prompt within `idle_gap_minutes`, default 30) with rule and gap;
+linked tasks share a `thread_id`. Task ids are `task:` + sha1 of the first
+turn id, so they are stable. Changing the grouping rules or config makes
+the next collect regroup everything (`attribution_rules` in `kv`).
+Subagent usage is attributed through spawn events to the task whose turn
+spawned them; `load_task_subtasks` returns that workflow tree (task ->
+subagents, depth 1: both collectors record children against the main
+session). Reconciliation reports what could not be attributed.
 
 ## 3. Snapshot (`tuner.reports.snapshot`)
 

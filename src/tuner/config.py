@@ -56,9 +56,9 @@ SCHEMA: dict[str, dict[str, Opt]] = {
         "extra_claude_dirs": Opt("list", []),
     },
     "attribution": {
-        "merge_followups": Opt("bool", True),
+        "link_followups": Opt("bool", True),
         "followup_max_chars": Opt("int", 80, lo=0, hi=500),
-        "idle_gap_minutes": Opt("int", 240, lo=1, hi=10080),
+        "idle_gap_minutes": Opt("int", 30, lo=1, hi=10080),
     },
     "analysis": {
         "cache": Opt("bool", True),

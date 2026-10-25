@@ -1,6 +1,6 @@
 # Progress
 
-Last updated 2026-10-23. 66 automated tests pass on macOS (strict
+Last updated 2026-10-23. 77 automated tests pass on macOS (strict
 encoding mode); ruff is clean.
 
 ## Done
@@ -56,7 +56,11 @@ encoding mode); ruff is clean.
 * Claude 1h-vs-5m cache-write pricing split and tiered long-context pricing
   are not modelled; historical usage uses current list prices unless dated
   overrides exist.
-* `/clear` boundaries are not used for task grouping.
+* `/clear` boundaries are not used for task grouping; continuation links
+  are heuristic (interrupted turn or short prompt within 30 minutes).
+* Subagent tree is one level deep (matches both collectors). Cursor
+  subagents are labelled by their first prompt, since Cursor stores no
+  subagent type or description locally.
 * Scheduled runs cannot run analysis unattended (no in-process LLM by
   design); they produce the report and a notification pointing to `/tuner`.
 * Effectiveness is observational (before/after medians, sample sizes), never

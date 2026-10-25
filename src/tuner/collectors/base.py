@@ -31,6 +31,9 @@ class SourceFile:
         return f"{self.size}:{self.mtime_ns}:{self.salt}"
 
 
+PARSER_VERSION = "2"  # bump to force a re-parse of every source
+
+
 class UsageCollector(Protocol):
     """Discover, parse, and describe one agent's local records."""
 

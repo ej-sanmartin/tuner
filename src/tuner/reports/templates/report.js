@@ -126,10 +126,12 @@ function task(id) {
   if (t.quality.known_gaps.length) el.append(h("div", { class: "notice" }, "Known gaps in this estimate: " + t.quality.known_gaps.join(", ")));
   if (t.cost) el.append(h("p", { class: "muted" }, t.cost.limitations.join("; ") + "."));
   el.append(h("h2", {}, "Analysis"), a ? analysis(a) : h("p", { class: "muted" }, "Not analyzed yet. Run /tuner in Cursor or Claude Code, or `tuner analyze`."));
+  el.append(h("h2", {}, "Subagents"), subagents(t));
   el.append(h("h2", {}, "Tool activity"), toolTable(t.tools));
   el.append(h("h2", {}, "Activity timeline"), timeline(t.timeline));
   el.append(h("h2", {}, "Sources"), h("ul", { class: "tight mono" }, t.sources.map((s) => h("li", {}, s.path))),
-    h("p", { class: "muted" }, `Grouping: ${t.grouping.boundary} (${t.grouping.confidence} confidence), ${t.turns} turn(s).`));
+    h("p", { class: "muted" }, "Starts a workflow with one prompt. " + (t.grouping.continues
+      ? `Likely continues an earlier task (${t.grouping.continues.rule.replace("_", " ")}, ${t.grouping.continues.gap_minutes == null ? "unknown" : Math.round(t.grouping.continues.gap_minutes)} min gap).` : "No earlier task linked.")));
   return el;
 }
 function analysis(a) {
@@ -139,6 +141,16 @@ function analysis(a) {
     h("h3", {}, "Productive complexity"), list(c.productive_complexity),
     h("h3", {}, "Potentially avoidable overhead"), list(c.avoidable_overhead),
     h("h3", {}, "Insufficient evidence"), list(c.insufficient_evidence));
+}
+function subagents(t) {
+  const s = t.subagents;
+  if (!s.count) return h("p", { class: "muted" }, "No subagents were started by this task.");
+  const rows = s.items.map((n) => h("tr", {}, h("td", {}, (n.type ? n.type + ": " : "") + (n.description || n.agent_ref || "subagent")),
+    h("td", { class: "hide mono" }, n.models.join(", ")), h("td", { class: "n" }, fmt(n.tokens.total)),
+    h("td", { class: "n" }, n.tools.total), h("td", { class: "n" }, n.tools.failed), h("td", {}, n.linked ? qpill(n.quality) : "not found")));
+  return h("div", {}, h("p", { class: "muted" }, `${fmt(s.own_tokens)} tokens by the agent itself, ${fmt(s.tokens)} by ${s.count} subagent(s).`),
+    table([["Subagent"], ["Model", "hide"], ["Tokens", "n"], ["Tools", "n"], ["Failed", "n"], ["Quality"]], rows),
+    s.omitted ? h("p", { class: "muted" }, `${s.omitted} smaller subagent(s) not shown.`) : null);
 }
 function toolTable(t) {
   const rows = Object.entries(t.by_name).sort((x, y) => y[1].count - x[1].count).slice(0, 12)

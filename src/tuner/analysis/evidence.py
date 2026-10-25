@@ -81,9 +81,10 @@ def signals_for(conn: sqlite3.Connection, rec: dict) -> list[dict]:
     if rec["turns"] >= 8:
         sig.append(("many_turns", f"{rec['turns']} prompts in one task",
                     {"turns": rec["turns"]}))
-    if rec["grouping"]["merges"]:
-        sig.append(("followup_merged", "short follow-ups merged into task",
-                    {"merges": len(rec["grouping"]["merges"])}))
+    cont = rec["grouping"].get("continues")
+    if cont:
+        sig.append(("continuation", f"continues {cont['task_id']} "
+                    f"({cont['rule']})", cont))
     skill_reads = [t for t in rec.get("timeline", [])
                    if t.get("kind") == "tool" and
                    ("SKILL.md" in (t.get("target") or "") or

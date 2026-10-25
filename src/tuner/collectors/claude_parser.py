@@ -63,7 +63,7 @@ class ClaudeFileParser:
         self.bad_lines = 0
         self.seq: dict[str, int] = {}
         self.last_stop: dict[str, str | None] = {}
-        self.pending_spawn: dict[str, tuple[str | None, int]] = {}
+        self.pending_spawn: dict[str, tuple[str | None, int, dict]] = {}
 
     # -- session helpers -------------------------------------------------
     def _session(self, entry: dict) -> SessionRec:
@@ -195,13 +195,14 @@ class ClaudeFileParser:
                     if isinstance(b, dict)
                     and b.get("type") == "tool_result"]
             tid = next((t for t in tids if t in self.pending_spawn), tids[0])
-            turn_id, ln = self.pending_spawn.pop(tid, (None, line_no))
+            turn_id, ln, label = self.pending_spawn.pop(
+                tid, (None, line_no, {}))
             self.out.events.append(EventRec(
                 id=f"{AGENT}:spawn:{res['agentId']}", session_id=sess.id,
                 turn_id=turn_id, ts=iso_utc(entry.get("timestamp")),
                 kind="subagent_spawn", source_line=ln,
                 data={"agent_ref": str(res["agentId"]),
-                      "tool_use_id": tid,
+                      "tool_use_id": tid, **label,
                       "reported_total_tokens": res.get("totalTokens"),
                       "reported_tool_uses": res.get("totalToolUseCount")}))
 
@@ -253,7 +254,12 @@ class ClaudeFileParser:
             source_line=line_no)
         self.tools[tid] = call
         if name in SPAWN_TOOLS and turn_id:
-            self.pending_spawn[tid] = (turn_id, line_no)
+            inp = block.get("input") if isinstance(
+                block.get("input"), dict) else {}
+            label = {k: preview(str(inp[k]), 120, self.extra)
+                     for k in ("subagent_type", "description")
+                     if inp.get(k)}
+            self.pending_spawn[tid] = (turn_id, line_no, label)
 
     # -- finish ----------------------------------------------------------
     def finish(self) -> ParsedSource:

@@ -1,5 +1,6 @@
 """End-to-end: collect -> tasks -> snapshot, incrementality, accounting."""
 
+import json
 from datetime import UTC, datetime
 
 from fixtures.builders import SID, build_claude, build_cursor
@@ -68,16 +69,22 @@ def test_resumed_session_replay_not_double_counted(env, conn):
     assert after == base
 
 
-def test_task_grouping_merges_short_followups(env, conn):
+def test_every_prompt_is_a_task_and_followups_are_linked(env, conn):
     build_claude(env)
     run(conn)
-    rows = conn.execute("SELECT title, boundary, confidence FROM tasks "
-                        "ORDER BY started_at").fetchall()
-    # "yes" merges into the first task; the 18:00 prompt is long -> new task
-    assert len(rows) == 2
-    assert rows[0]["boundary"] == "followup_merge"
-    assert rows[0]["confidence"] == "medium"
-    assert rows[1]["confidence"] == "high"
+    rows = conn.execute("SELECT id, title, boundary, confidence, "
+                        "evidence_json FROM tasks ORDER BY started_at"
+                        ).fetchall()
+    assert len(rows) == 3  # nothing is merged
+    assert {r["boundary"] for r in rows} == {"new_prompt"}
+    ev = [json.loads(r["evidence_json"]) for r in rows]
+    # "yes" (short, 5 min later) continues task 1; the 18:00 long prompt
+    # starts a new thread
+    assert ev[1]["continues"]["task_id"] == rows[0]["id"]
+    assert ev[1]["continues"]["rule"] == "short_followup"
+    assert ev[1]["thread_id"] == ev[0]["thread_id"] == rows[0]["id"]
+    assert ev[2]["continues"] is None
+    assert ev[2]["thread_id"] == rows[2]["id"]
 
 
 def test_subagent_usage_attributed_to_parent_task(env, conn):

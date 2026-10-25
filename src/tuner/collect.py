@@ -13,7 +13,7 @@ from dataclasses import dataclass, field
 from datetime import datetime
 
 from tuner import paths
-from tuner.attribution import rebuild_tasks
+from tuner.attribution import ATTRIBUTION_VERSION, rebuild_tasks
 from tuner.collectors import UsageCollector
 from tuner.config import Config
 from tuner.storage import repo
@@ -67,6 +67,12 @@ def _collect_one(conn: sqlite3.Connection, col: UsageCollector,
                 touched.add(s.parent_id)
 
 
+def _main_sessions(conn: sqlite3.Connection) -> set[str]:
+    """Ids of all main (non-subagent) sessions."""
+    return {r[0] for r in conn.execute(
+        "SELECT id FROM sessions WHERE kind='main'")}
+
+
 def collect(conn: sqlite3.Connection, collectors: list[UsageCollector],
             cfg: Config, since: datetime | None = None, full: bool = False,
             lock_timeout: float = 0.0) -> CollectStats:
@@ -78,11 +84,17 @@ def collect(conn: sqlite3.Connection, collectors: list[UsageCollector],
             touched: set[str] = set()
             for col in collectors:
                 _collect_one(conn, col, since, full, stats, touched)
-            if touched or full:
-                a = cfg.attribution
+            a = cfg.attribution
+            rules = (f"{ATTRIBUTION_VERSION}:{a.link_followups}:"
+                     f"{a.followup_max_chars}:{a.idle_gap_minutes}")
+            stale = repo.kv_get(conn, "attribution_rules") != rules
+            if touched or full or stale:
+                if full or stale:  # grouping rules changed: regroup all
+                    touched = _main_sessions(conn) | touched
                 stats.tasks_written = rebuild_tasks(
-                    conn, touched, a.merge_followups, a.followup_max_chars,
+                    conn, touched, a.link_followups, a.followup_max_chars,
                     a.idle_gap_minutes)
+                repo.kv_set(conn, "attribution_rules", rules)
             repo.kv_set(conn, "last_collect", repo.now_iso())
     except LockBusy:
         stats.busy = True

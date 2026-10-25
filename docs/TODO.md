@@ -12,3 +12,10 @@
 - (Deferred) PyPI publish + release workflow, then test `tuner upgrade`
   against the real index.
 - Possible: Claude Code `SessionEnd` hook to tick like Cursor hooks.
+- Before publishing: `init` writes every default into config.toml, which
+  pins old defaults and breaks on renamed keys (hit when `merge_followups`
+  became `link_followups`). Write only non-default keys, or add a rename
+  migration in `sync`.
+- Calibrate Cursor token estimates per task against ground truth
+  (agreed next step after the workflow tree).
+- Thread rollups (sum tokens across a `thread_id`) in `usage.json`/HTML.

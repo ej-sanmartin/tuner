@@ -7,8 +7,11 @@ direct usage joins on turn ids while subagent usage joins on session ids.
 
 from __future__ import annotations
 
+import json
 import sqlite3
 from collections import defaultdict
+
+from tuner.reports import aggregate as agg
 
 SUMS = ("SUM(u.input_tokens) AS input_tokens, "
         "SUM(u.output_tokens) AS output_tokens, "
@@ -111,6 +114,69 @@ def load_task_events(conn: sqlite3.Connection, task_ids: list[str]
                "subagent_spawn": "subagents"}.get(row["kind"])
         if key:
             out[row["task_id"]][key] += row["n"]
+    return out
+
+
+def _node(spawn: sqlite3.Row, rows: list[dict], tools: sqlite3.Row | None
+          ) -> dict:
+    """One subagent node of a task's workflow tree."""
+    data = json.loads(spawn["data_json"] or "{}")
+    label = (data.get("description") or spawn["title"]
+             or (spawn["first_prompt"] or "")[:120])
+    return {
+        "id": spawn["child_id"], "agent_ref": data.get("agent_ref"),
+        "type": data.get("subagent_type"), "description": label,
+        "spawned_by_turn": spawn["spawn_turn"],
+        "started_at": spawn["started_at"], "ended_at": spawn["ended_at"],
+        "linked": spawn["child_id"] is not None,
+        "tokens": agg.totals(rows),
+        "models": [m["model"] for m in agg.by_model(rows)],
+        "quality": {k: agg.quality(rows)[k]
+                    for k in ("measurement", "confidence")},
+        "tools": {"total": tools["n"] if tools else 0,
+                  "failed": (tools["failed"] or 0) if tools else 0},
+    }
+
+
+def load_task_subtasks(conn: sqlite3.Connection, task_ids: list[str],
+                       cap: int = 25) -> dict[str, dict]:
+    """Subagents per task: {count, items (top `cap` by tokens), omitted}.
+
+    Each item records which task's turn spawned it, so the workflow tree
+    is task -> subagents. Spawns whose child file is unknown stay listed
+    with `linked: false` and no usage.
+    """
+    out: dict[str, dict] = {t: {"items": [], "omitted": 0}
+                            for t in task_ids}
+    if not task_ids:
+        return out
+    _load_temp(conn, task_ids)
+    left = CHILD_JOIN.replace("JOIN sessions", "LEFT JOIN sessions", 1)
+    spawns = conn.execute(
+        f"SELECT tt.task_id, c.id child_id, c.title, c.started_at, "
+        f"c.ended_at, e.turn_id spawn_turn, e.data_json, (SELECT "
+        f"prompt_preview FROM turns WHERE session_id = c.id "
+        f"ORDER BY seq LIMIT 1) first_prompt FROM _tt tt "
+        f"{left} ORDER BY c.started_at, e.id").fetchall()
+    usage: dict[str, list[dict]] = defaultdict(list)
+    for r in conn.execute(
+            f"SELECT c.id child_id, {COLS}, {SUMS} FROM _tt tt {CHILD_JOIN} "
+            f"JOIN usage_events u ON u.session_id = c.id "
+            f"GROUP BY c.id, {GROUP}"):
+        usage[r["child_id"]].append(dict(r))
+    tools = {r["child_id"]: r for r in conn.execute(
+        f"SELECT c.id child_id, COUNT(k.id) n, SUM(k.is_error=1) failed "
+        f"FROM _tt tt {CHILD_JOIN} JOIN tool_calls k ON "
+        f"k.session_id = c.id GROUP BY c.id")}
+    nodes: dict[str, list[dict]] = defaultdict(list)
+    for sp in spawns:
+        cid = sp["child_id"]
+        nodes[sp["task_id"]].append(_node(sp, usage.get(cid, []),
+                                          tools.get(cid)))
+    for tid, items in nodes.items():
+        keep = sorted(items, key=lambda n: -n["tokens"]["total"])[:cap]
+        keep.sort(key=lambda n: n["started_at"] or "")
+        out[tid] = {"items": keep, "omitted": len(items) - len(keep)}
     return out
 
 

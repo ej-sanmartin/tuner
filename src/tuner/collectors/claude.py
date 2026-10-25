@@ -9,7 +9,7 @@ from datetime import datetime
 from pathlib import Path
 
 from tuner import paths
-from tuner.collectors.base import SourceFile
+from tuner.collectors.base import PARSER_VERSION, SourceFile
 from tuner.collectors.claude_parser import AGENT, parse_claude_file
 from tuner.models import ParsedSource
 from tuner.security.redact import compile_extra
@@ -93,7 +93,8 @@ class ClaudeCollector:
                 if cutoff is not None and st.st_mtime < cutoff:
                     continue
                 self._roots[str(path)] = root
-                yield SourceFile(path, self.name, st.st_size, st.st_mtime_ns)
+                yield SourceFile(path, self.name, st.st_size, st.st_mtime_ns,
+                                 PARSER_VERSION)
 
     def parse(self, src: SourceFile) -> ParsedSource:
         """Parse one transcript file."""

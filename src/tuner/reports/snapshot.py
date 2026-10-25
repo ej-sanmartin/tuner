@@ -60,10 +60,13 @@ def _task_record(conn, row, rows, tools, events, grand_total, book,
         "turns": len(evidence.get("turn_ids", [])),
         "grouping": {"boundary": row["boundary"],
                      "confidence": row["confidence"],
-                     "merges": evidence.get("merges", [])},
+                     "continues": evidence.get("continues"),
+                     "thread_id": evidence.get("thread_id")},
         "tools": tools,
         "subagents": {"count": events["subagents"],
-                      "tokens": agg.totals(sub_rows)["total"]},
+                      "tokens": agg.totals(sub_rows)["total"],
+                      "own_tokens": tok["total"]
+                      - agg.totals(sub_rows)["total"]},
         "compactions": events["compactions"],
         "sources": [{"path": row["session_source"],
                      "first_turn": (evidence.get("turn_ids") or [None])[0]}],
@@ -93,12 +96,14 @@ def build_snapshot(conn: sqlite3.Connection, cfg: Config, period: Period,
     detail_ids = [t["id"] for t in ranked[:max(top_n, DETAIL_FLOOR)]]
     tools = uq.load_task_tools(conn, detail_ids)
     events = uq.load_task_events(conn, detail_ids)
+    subtasks = uq.load_task_subtasks(conn, detail_ids)
     records = []
     for rank, row in enumerate(ranked[:max(top_n, DETAIL_FLOOR)], start=1):
         rec = _task_record(conn, row, usage.get(row["id"], []),
                            tools[row["id"]], events[row["id"]],
                            grand["total"], book, with_cost, True)
         rec["rank"] = rank
+        rec["subagents"].update(subtasks[row["id"]])
         records.append(rec)
     overview = {
         "tokens": grand,

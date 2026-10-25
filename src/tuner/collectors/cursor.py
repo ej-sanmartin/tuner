@@ -9,7 +9,7 @@ from pathlib import Path
 
 from tuner import hook_spool
 from tuner.collectors import cursor_paths as cp
-from tuner.collectors.base import SourceFile
+from tuner.collectors.base import PARSER_VERSION, SourceFile
 from tuner.collectors.common import iso_utc, repo_for
 from tuner.collectors.cursor_enrich import (
     apply_bubbles,
@@ -116,7 +116,7 @@ class CursorCollector:
             if cutoff is not None and st.st_mtime < cutoff:
                 continue
             _, native, _ = layout(path, root)
-            salt = str(self.hooks.count(native))
+            salt = f"{PARSER_VERSION}:{self.hooks.count(native)}"
             yield SourceFile(path, AGENT, st.st_size, st.st_mtime_ns, salt)
 
     def capabilities(self) -> dict:
