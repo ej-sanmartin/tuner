@@ -171,7 +171,7 @@ class CursorCollector:
             model = comp.model or model
             if err:
                 out.errors.append(err)
-            if any(d.method == "cursor_bubbles_v1" for d in drafts):
+            if any(d.method == "cursor_bubbles_v2" for d in drafts):
                 time_quality = "measured"
         elif (self.state is not None and self.state.error
               and "not found" not in self.state.error):
@@ -185,8 +185,10 @@ class CursorCollector:
         for d in drafts:
             out.turns.append(d.rec)
             out.tools.extend(d.tools)
+        compactions = [t for e in hook_events if e["event"] == "preCompact"
+                       if (t := iso_utc(e["ts"]))]
         out.usage = estimate_usage(drafts, sid, model, str(src.path),
-                                   "cursor_local_transcript")
+                                   "cursor_local_transcript", compactions)
         if comp is not None:
             out.events += self._spawn_events(sid, comp, drafts)
         out.events += self._hook_events(sid, hook_events, drafts)

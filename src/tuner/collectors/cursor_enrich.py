@@ -75,7 +75,7 @@ def _enrich_turn(draft: TurnDraft, ub: Bubble, rest: list[Bubble]) -> None:
     draft.rec.ended_at = next((b.ts for b in reversed(rest) if b.ts), ub.ts)
     if assistants:
         draft.steps = _steps(draft.rec.prompt_chars, assistants)
-        draft.method = "cursor_bubbles_v1"
+        draft.method = "cursor_bubbles_v2"
     calls = [b for b in assistants if b.tool_call_id]
     if len(calls) == len(draft.tools):
         for tool, b in zip(draft.tools, calls, strict=True):

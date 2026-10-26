@@ -126,7 +126,7 @@ def test_cursor_estimates_and_unlinked_subagent_reported(env, conn):
     rows = conn.execute(
         "SELECT * FROM usage_events WHERE session_id=?", (CUR,)).fetchall()
     assert rows and all(r["measurement"] == "estimated" for r in rows)
-    assert all(r["method"] == "cursor_visible_v1" for r in rows)
+    assert all(r["method"] == "cursor_visible_v2" for r in rows)
     snap = build_snapshot(conn, config.load(), period())
     rec = snap["data_quality"]["reconciliation"]
     # subagent transcript exists but nothing links it to a parent turn

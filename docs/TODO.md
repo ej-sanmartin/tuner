@@ -19,3 +19,10 @@
 - Calibrate Cursor token estimates per task against ground truth
   (agreed next step after the workflow tree).
 - Thread rollups (sum tokens across a `thread_id`) in `usage.json`/HTML.
+- Calibration data: export the Cursor dashboard usage CSV (per-request
+  tokens by category) for the last week, match requests to tasks by time
+  and model, and tune the tool-result cap from hundreds of points.
+- Cursor model per turn: a conversation's model is read from the composer's
+  *current* setting, so switching models mid-chat relabels earlier steps
+  (seen on 2026-10-26: sonnet turns became grok). Use the per-prompt model
+  from `beforeSubmitPrompt` hook events when they align with turns.

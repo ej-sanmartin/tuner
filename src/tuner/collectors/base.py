@@ -31,7 +31,7 @@ class SourceFile:
         return f"{self.size}:{self.mtime_ns}:{self.salt}"
 
 
-PARSER_VERSION = "2"  # bump to force a re-parse of every source
+PARSER_VERSION = "3"  # bump to force a re-parse of every source
 
 
 class UsageCollector(Protocol):

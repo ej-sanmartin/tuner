@@ -1,6 +1,6 @@
 # Progress
 
-Last updated 2026-10-23. 77 automated tests pass on macOS (strict
+Last updated 2026-10-26. 81 automated tests pass on macOS (strict
 encoding mode); ruff is clean.
 
 ## Done
@@ -53,6 +53,14 @@ encoding mode); ruff is clean.
 
 * Cursor tokens are estimates (documented method, low/medium confidence,
   `KNOWN_GAPS` listed in the data).
+* **Cursor estimate calibration (2026-10-26, 3 dashboard requests):**
+  estimator v1 was 4.6x, 9.6x and 11.7x too high. Cause: the assumed
+  context grew without bound. v2 restarts the context at each compaction
+  and caps it at Cursor's 300K window (measured: compactions fired at
+  280K-351K real tokens vs 476K-1.46M estimated). One task is now within
+  1% (954K vs 947K); two still run 4.4x and 5.8x high because oversized
+  tool results are counted in full (`oversized_tool_results` gap).
+  Three requests are too few to tune a result-size cap, so none is applied.
 * Claude 1h-vs-5m cache-write pricing split and tiered long-context pricing
   are not modelled; historical usage uses current list prices unless dated
   overrides exist.
