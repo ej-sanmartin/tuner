@@ -1,6 +1,6 @@
 # Progress
 
-Last updated 2026-10-26. 81 automated tests pass on macOS (strict
+Last updated 2026-10-26. 86 automated tests pass on macOS (strict
 encoding mode); ruff is clean.
 
 ## Done
@@ -53,14 +53,22 @@ encoding mode); ruff is clean.
 
 * Cursor tokens are estimates (documented method, low/medium confidence,
   `KNOWN_GAPS` listed in the data).
-* **Cursor estimate calibration (2026-10-26, 3 dashboard requests):**
-  estimator v1 was 4.6x, 9.6x and 11.7x too high. Cause: the assumed
-  context grew without bound. v2 restarts the context at each compaction
-  and caps it at Cursor's 300K window (measured: compactions fired at
-  280K-351K real tokens vs 476K-1.46M estimated). One task is now within
-  1% (954K vs 947K); two still run 4.4x and 5.8x high because oversized
-  tool results are counted in full (`oversized_tool_results` gap).
-  Three requests are too few to tune a result-size cap, so none is applied.
+* **Cursor estimate calibration (2026-10-26, 136 requests from the
+  dashboard usage CSV, one row per request):** the first estimator was
+  4.6x-11.7x too high. Fitted parameters (`cursor_estimate.py`): 15K-token
+  system prompt, tool results capped at 2K tokens each, 300K window with
+  restart at compaction, output scaled 1.7x. Now (in-sample): totals have
+  median 1.05x of the dashboard, typical error 1.6x, 82% within 2x; output
+  1.4x. The new-input / cache-read split is only right on average (typical
+  error 2.6x-2.9x), as Cursor's cache behaviour is not modelled. Per model
+  the totals lean low for Claude (-28%) and high for composer (+50%).
+  Per-turn models now come from `beforeSubmitPrompt` hooks (the chat's
+  current model mislabelled 48% of requests; now 19%, mostly turns that
+  predate hooks). About 1% of dashboard tokens belong to requests with no
+  matching turn (background or summary calls).
+* Ground truth for Cursor exists only on the dashboard (CSV export, or an
+  undocumented session-cookie API used by other tools); nothing local has
+  it (`tokenCount` in the state DB is always 0). Tuner stays offline.
 * Claude 1h-vs-5m cache-write pricing split and tiered long-context pricing
   are not modelled; historical usage uses current list prices unless dated
   overrides exist.

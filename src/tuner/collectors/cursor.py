@@ -13,6 +13,7 @@ from tuner.collectors.base import PARSER_VERSION, SourceFile
 from tuner.collectors.common import iso_utc, repo_for
 from tuner.collectors.cursor_enrich import (
     apply_bubbles,
+    apply_hook_models,
     apply_hooks,
     dominant_model,
 )
@@ -171,13 +172,14 @@ class CursorCollector:
             model = comp.model or model
             if err:
                 out.errors.append(err)
-            if any(d.method == "cursor_bubbles_v2" for d in drafts):
+            if any(d.method == "cursor_bubbles_v1" for d in drafts):
                 time_quality = "measured"
         elif (self.state is not None and self.state.error
               and "not found" not in self.state.error):
             out.errors.append(self.state.error)
         if time_quality != "measured" and apply_hooks(drafts, hook_events):
             time_quality = "hook"
+        apply_hook_models(drafts, hook_events)
         model = dominant_model(drafts, model)
         sess = self._session(src, sid, native, parent, slug, root_path,
                              repo, titles.get(native), drafts, time_quality)

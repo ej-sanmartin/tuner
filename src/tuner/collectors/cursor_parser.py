@@ -38,7 +38,7 @@ class TurnDraft:
     steps: list[Step] = field(default_factory=list)
     tools: list[ToolCallRec] = field(default_factory=list)
     head: str = ""
-    method: str = "cursor_visible_v2"
+    method: str = "cursor_visible_v1"
 
 
 def _blocks(entry: dict) -> list[dict]:

@@ -4,7 +4,6 @@
   `~/.local/bin` is not on PATH.
 - Apply one real skill proposal end to end and check effectiveness
   tracking on real data.
-- Compare Cursor token estimates with ground truth (Cursor dashboard).
 - Linux support: systemd user timer (with `Persistent=true`), paths and
   notifications.
 - (Deferred) Live `/tuner` run in Cursor and Claude Code, compact evidence
@@ -16,13 +15,11 @@
   pins old defaults and breaks on renamed keys (hit when `merge_followups`
   became `link_followups`). Write only non-default keys, or add a rename
   migration in `sync`.
-- Calibrate Cursor token estimates per task against ground truth
-  (agreed next step after the workflow tree).
 - Thread rollups (sum tokens across a `thread_id`) in `usage.json`/HTML.
-- Calibration data: export the Cursor dashboard usage CSV (per-request
-  tokens by category) for the last week, match requests to tasks by time
-  and model, and tune the tool-result cap from hundreds of points.
-- Cursor model per turn: a conversation's model is read from the composer's
-  *current* setting, so switching models mid-chat relabels earlier steps
-  (seen on 2026-10-26: sonnet turns became grok). Use the per-prompt model
-  from `beforeSubmitPrompt` hook events when they align with turns.
+- Re-fit Cursor estimates when a new CSV is available (hold out a week
+  to check the in-sample numbers); consider per-model system prompt size
+  (Claude low, composer high).
+- Optional `tuner import cursor-csv <file>`: store the dashboard's exact
+  per-request tokens as measured data and show estimate error in doctor.
+- Turns the CSV shows with no steps in our data (about 20), and 21 CSV
+  requests with no turn (about 1% of tokens): find what they are.

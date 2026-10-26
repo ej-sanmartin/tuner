@@ -6,7 +6,9 @@ caller records a coverage gap and keeps transcript-only estimates.
 
 from __future__ import annotations
 
+import re
 from collections import Counter
+from datetime import datetime
 from difflib import SequenceMatcher
 
 from tuner.collectors.common import iso_utc
@@ -14,6 +16,8 @@ from tuner.collectors.cursor_parser import Step, TurnDraft
 from tuner.collectors.cursor_state import Bubble, Composer
 
 _ERROR_STATUSES = {"error", "failed", "rejected", "cancelled", "canceled"}
+_TIER = re.compile(r"(-(low|medium|high|xhigh|max|fast))+$")
+PROMPT_MATCH_S = 5.0  # hook fires within seconds of the turn start
 
 
 def _split(bubbles: list[Bubble]) -> list[tuple[Bubble, list[Bubble]]]:
@@ -75,7 +79,7 @@ def _enrich_turn(draft: TurnDraft, ub: Bubble, rest: list[Bubble]) -> None:
     draft.rec.ended_at = next((b.ts for b in reversed(rest) if b.ts), ub.ts)
     if assistants:
         draft.steps = _steps(draft.rec.prompt_chars, assistants)
-        draft.method = "cursor_bubbles_v2"
+        draft.method = "cursor_bubbles_v1"
     calls = [b for b in assistants if b.tool_call_id]
     if len(calls) == len(draft.tools):
         for tool, b in zip(draft.tools, calls, strict=True):
@@ -108,3 +112,27 @@ def apply_hooks(drafts: list[TurnDraft], events: list[dict]) -> bool:
         if ended and not draft.rec.ended_at:
             draft.rec.ended_at = iso_utc(max(ended))
     return True
+
+
+def apply_hook_models(drafts: list[TurnDraft], events: list[dict]) -> int:
+    """Label each turn's steps with the model its prompt hook reported.
+
+    A conversation can switch models between prompts, but the state DB
+    keeps only the current one. The hook model equals the dashboard's.
+    Matches by start time (nearest prompt within PROMPT_MATCH_S); returns
+    the number of turns labelled.
+    """
+    prompts = [(e["ts"], _TIER.sub("", e["model"])) for e in events
+               if e["event"] == "beforeSubmitPrompt" and e.get("model")]
+    done = 0
+    for draft in drafts:
+        if not (draft.rec.started_at and prompts and draft.steps):
+            continue
+        start = datetime.fromisoformat(draft.rec.started_at).timestamp()
+        ts, model = min(prompts, key=lambda p: abs(p[0] - start))
+        if abs(ts - start) > PROMPT_MATCH_S:
+            continue
+        for step in draft.steps:
+            step.model = model
+        done += 1
+    return done
