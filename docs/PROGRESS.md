@@ -1,6 +1,6 @@
 # Progress
 
-Last updated 2026-10-26. 86 automated tests pass on macOS (strict
+Last updated 2026-10-28. 93 automated tests pass on macOS (strict
 encoding mode); ruff is clean.
 
 ## Done
@@ -66,9 +66,11 @@ encoding mode); ruff is clean.
   current model mislabelled 48% of requests; now 19%, mostly turns that
   predate hooks). About 1% of dashboard tokens belong to requests with no
   matching turn (background or summary calls).
-* Ground truth for Cursor exists only on the dashboard (CSV export, or an
-  undocumented session-cookie API used by other tools); nothing local has
-  it (`tokenCount` in the state DB is always 0). Tuner stays offline.
+* Cursor ground truth is still not in the local transcripts (`tokenCount`
+  is always 0). `tuner import cursor <file>` or `tuner import cursor
+  --fetch` stores a dashboard CSV and reports use those measured totals
+  for turns whose start is within 3s. `--fetch` sends the local Cursor
+  session token to cursor.com. Unmatched requests stay out of task totals.
 * Claude 1h-vs-5m cache-write pricing split and tiered long-context pricing
   are not modelled; historical usage uses current list prices unless dated
   overrides exist.

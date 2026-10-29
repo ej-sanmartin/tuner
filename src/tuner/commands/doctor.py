@@ -73,6 +73,10 @@ def checks() -> list[dict]:
             add("cursor hooks", OK if ev else WARN,
                 f"{len(ev)} events" if ev else "not installed "
                 "(timestamps/compaction less precise); `tuner init`")
+            if found:
+                from tuner.dashboard.csv import reconcile_status
+                rec = reconcile_status(conn)
+                add("cursor reconcile", rec["status"], rec["detail"])
     sk = skill_install.target_dir(cfg.skills.skill_dir)
     add("/tuner skill", OK if skill_install.is_managed(sk) else WARN,
         str(sk) if sk.exists() else "not installed; `tuner init`")

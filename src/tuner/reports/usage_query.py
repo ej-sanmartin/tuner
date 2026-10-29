@@ -14,6 +14,9 @@ from collections import defaultdict
 from tuner.attribution.tasks import synthetic_rule
 from tuner.reports import aggregate as agg
 
+# Estimates are hidden where a dashboard row matched that turn.
+USAGE = "usage_effective"
+
 SUMS = ("SUM(u.input_tokens) AS input_tokens, "
         "SUM(u.output_tokens) AS output_tokens, "
         "SUM(u.cache_write_tokens) AS cache_write_tokens, "
@@ -50,11 +53,11 @@ def load_task_usage(conn: sqlite3.Connection, task_ids: list[str]
     _load_temp(conn, task_ids)
     queries = {
         "direct": (f"SELECT tt.task_id, {COLS}, {SUMS} FROM _tt tt JOIN "
-                   f"usage_events u ON u.turn_id = tt.turn_id "
+                   f"{USAGE} u ON u.turn_id = tt.turn_id "
                    f"GROUP BY tt.task_id, {GROUP}"),
         "subagent": (f"SELECT tt.task_id, {COLS}, {SUMS}, "
                      f"COUNT(DISTINCT c.id) AS children FROM _tt tt "
-                     f"{CHILD_JOIN} JOIN usage_events u "
+                     f"{CHILD_JOIN} JOIN {USAGE} u "
                      f"ON u.session_id = c.id "
                      f"GROUP BY tt.task_id, {GROUP}"),
     }
@@ -162,7 +165,7 @@ def load_task_subtasks(conn: sqlite3.Connection, task_ids: list[str],
     usage: dict[str, list[dict]] = defaultdict(list)
     for r in conn.execute(
             f"SELECT c.id child_id, {COLS}, {SUMS} FROM _tt tt {CHILD_JOIN} "
-            f"JOIN usage_events u ON u.session_id = c.id "
+            f"JOIN {USAGE} u ON u.session_id = c.id "
             f"GROUP BY c.id, {GROUP}"):
         usage[r["child_id"]].append(dict(r))
     tools = {r["child_id"]: r for r in conn.execute(

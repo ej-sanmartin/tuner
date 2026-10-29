@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import sqlite3
+from datetime import datetime
 
 from tuner.reports import aggregate as agg
 from tuner.reports import usage_query as uq
@@ -31,7 +32,7 @@ def reconciliation(conn: sqlite3.Connection, session_ids: list[str]
                 "unlinked_subagent_sessions": 0, "reconciled": True}
     m = _marks(len(session_ids))
     total = conn.execute(
-        f"SELECT COALESCE(SUM({TOKENS}),0) FROM usage_events WHERE "
+        f"SELECT COALESCE(SUM({TOKENS}),0) FROM {uq.USAGE} WHERE "
         f"session_id IN ({m}) OR session_id IN (SELECT id FROM sessions "
         f"WHERE parent_id IN ({m}))", session_ids * 2).fetchone()[0]
     task_ids = [r[0] for r in conn.execute(
@@ -51,6 +52,42 @@ def reconciliation(conn: sqlite3.Connection, session_ids: list[str]
             "reconciled": total == attributed}
 
 
+def _when(ts: str) -> datetime:
+    """Parse a stored UTC timestamp."""
+    return datetime.fromisoformat(ts.replace("Z", "+00:00"))
+
+
+def _dashboard_gaps(conn: sqlite3.Connection, period: Period,
+                    est_rows: list[dict]) -> list[dict]:
+    """Ask for a dashboard CSV, and report requests that matched nothing."""
+    gaps: list[dict] = []
+    n = conn.execute("SELECT COUNT(*) FROM dashboard_requests").fetchone()[0]
+    cursor_est = any(r.get("source") == "cursor_local_transcript"
+                     for r in est_rows)
+    if cursor_est and not n:
+        gaps.append({
+            "code": "cursor_dashboard_missing",
+            "message": "Cursor totals are estimates. Import a dashboard "
+                       "usage CSV to replace matched turns with measured "
+                       "numbers: `tuner import cursor <file>`, or "
+                       "`tuner import cursor --fetch` (sends the Cursor "
+                       "session token to cursor.com)."})
+    rows = conn.execute(
+        "SELECT ts, input_tokens + output_tokens + cache_write_tokens + "
+        "cache_read_tokens AS n FROM dashboard_requests "
+        "WHERE turn_id IS NULL").fetchall()
+    hit = [r for r in rows if period.start <= _when(r["ts"]) < period.end]
+    if hit:
+        tokens = sum(r["n"] for r in hit)
+        gaps.append({
+            "code": "dashboard_unmatched", "requests": len(hit),
+            "tokens": tokens,
+            "message": f"{len(hit)} dashboard requests ({tokens:,} tokens) "
+                       "in this period did not match a local turn (start "
+                       "within 3s), so they are not in task totals."})
+    return gaps
+
+
 def data_quality(conn: sqlite3.Connection, period: Period,
                  tasks: list[sqlite3.Row], usage: dict) -> dict:
     """Coverage gaps, collection errors and reconciliation summary."""
@@ -64,6 +101,7 @@ def data_quality(conn: sqlite3.Connection, period: Period,
             "message": "Some token counts are estimates (the agent does "
                        "not expose exact usage).",
             "tokens": agg.totals(est_rows)["total"]})
+    gaps.extend(_dashboard_gaps(conn, period, est_rows))
     mtime = sum(1 for t in tasks if t["time_quality"] == "file_mtime")
     if mtime:
         gaps.append({

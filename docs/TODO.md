@@ -16,10 +16,8 @@
   became `link_followups`). Write only non-default keys, or add a rename
   migration in `sync`.
 - Thread rollups (sum tokens across a `thread_id`) in `usage.json`/HTML.
-- Re-fit Cursor estimates when a new CSV is available (hold out a week
-  to check the in-sample numbers); consider per-model system prompt size
-  (Claude low, composer high).
-- Optional `tuner import cursor-csv <file>`: store the dashboard's exact
-  per-request tokens as measured data and show estimate error in doctor.
-- Turns the CSV shows with no steps in our data (about 20), and 21 CSV
-  requests with no turn (about 1% of tokens): find what they are.
+- Hold out a new dashboard week (`tuner import cursor --fetch`, then
+  `doctor`) and re-fit only if the error moved. Per-model system prompt
+  size is the candidate (Claude low, composer high).
+- Dashboard requests that match no turn (about 1% of tokens on the
+  2026-10-26 export, start time more than 3s from any turn).

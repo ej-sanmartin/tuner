@@ -42,7 +42,7 @@ def _repeated_failures(conn: sqlite3.Connection, task_id: str) -> list[dict]:
 def _peak_context(conn: sqlite3.Connection, task_id: str) -> int:
     row = conn.execute(
         "SELECT MAX(u.input_tokens + u.cache_read_tokens + "
-        "u.cache_write_tokens) m FROM task_turns tt JOIN usage_events u "
+        "u.cache_write_tokens) m FROM task_turns tt JOIN usage_effective u "
         "ON u.turn_id = tt.turn_id WHERE tt.task_id=?", (task_id,)).fetchone()
     return int(row["m"] or 0)
 

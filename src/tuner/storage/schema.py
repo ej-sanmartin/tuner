@@ -86,4 +86,30 @@ CREATE TABLE skill_changes (
 CREATE INDEX idx_skill_changes_name ON skill_changes(skill_name);
 """
 
-MIGRATIONS = [V1, V2]
+V3 = """
+CREATE TABLE dashboard_requests (
+  id TEXT PRIMARY KEY, ts TEXT NOT NULL, model TEXT NOT NULL,
+  input_tokens INTEGER NOT NULL, cache_write_tokens INTEGER NOT NULL,
+  cache_read_tokens INTEGER NOT NULL, output_tokens INTEGER NOT NULL,
+  turn_id TEXT, match_delta_s REAL, imported_at TEXT NOT NULL
+);
+CREATE INDEX idx_dashboard_turn ON dashboard_requests(turn_id);
+CREATE VIEW usage_effective AS
+SELECT id, session_id, turn_id, ts, model, input_tokens, output_tokens,
+       cache_write_tokens, cache_read_tokens, measurement, confidence,
+       source, method, source_path, source_line
+FROM usage_events
+WHERE turn_id IS NULL OR turn_id NOT IN (
+  SELECT turn_id FROM dashboard_requests WHERE turn_id IS NOT NULL)
+UNION ALL
+SELECT 'cursor:dashboard:' || id,
+       (SELECT session_id FROM turns WHERE id = dashboard_requests.turn_id),
+       turn_id, ts, model, input_tokens, output_tokens,
+       cache_write_tokens, cache_read_tokens,
+       'measured', 'high', 'cursor_dashboard', 'cursor_dashboard_csv',
+       'cursor:dashboard', 0
+FROM dashboard_requests
+WHERE turn_id IS NOT NULL;
+"""
+
+MIGRATIONS = [V1, V2, V3]

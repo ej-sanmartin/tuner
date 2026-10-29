@@ -65,6 +65,9 @@ def print_summary(usage: dict, path) -> None:
               f"{t['quality']['measurement']:<9} {t['agent']:<11} "
               f"{(t['repo'] or '-')[:18]:<18} {t['title'][:50]}")
     print(f"Report: {path}")
+    for gap in usage["data_quality"]["coverage_gaps"]:
+        if gap["code"] in ("cursor_dashboard_missing", "dashboard_unmatched"):
+            print(gap["message"])
 
 
 def run(args) -> int:

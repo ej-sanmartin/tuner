@@ -23,7 +23,7 @@ def _task_tokens(conn: sqlite3.Connection, repo: str | None, start: str,
         "SELECT SUM(u.input_tokens + u.output_tokens + u.cache_write_tokens"
         " + u.cache_read_tokens) AS total FROM tasks t JOIN sessions s ON "
         "s.id = t.session_id JOIN task_turns tt ON tt.task_id = t.id JOIN "
-        "usage_events u ON u.turn_id = tt.turn_id WHERE "
+        "usage_effective u ON u.turn_id = tt.turn_id WHERE "
         "COALESCE(t.ended_at, t.started_at) >= ? AND "
         "COALESCE(t.ended_at, t.started_at) < ?")
     args: list = [start, end]

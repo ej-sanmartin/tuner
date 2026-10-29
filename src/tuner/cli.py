@@ -7,7 +7,7 @@ import sys
 
 COMMAND_MODULES = ("init", "doctor", "collect", "report", "analyze", "open",
                    "skills", "schedule", "config", "pricing", "upgrade",
-                   "uninstall")
+                   "import_usage", "uninstall")
 
 
 def build_parser() -> argparse.ArgumentParser:

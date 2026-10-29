@@ -24,7 +24,9 @@ returned in `ParsedSource.errors`.
 * `cursor*.py`: transcripts + read-only `state.vscdb` enrichment + hook
   spool. Tokens are estimated (`cursor_estimate.py`) with documented
   methods and `KNOWN_GAPS`; if Cursor ever stores real counts they are used
-  as measured.
+  as measured. `tuner import cursor` stores a dashboard usage CSV (from a
+  file, or `--fetch` against cursor.com with the local session token) and
+  reports use those measured request totals for the turns they match.
 
 ## 2. Store and attribution (`tuner.storage`, `tuner.attribution`)
 

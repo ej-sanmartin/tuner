@@ -16,6 +16,7 @@ from tuner import paths
 from tuner.attribution import ATTRIBUTION_VERSION, rebuild_tasks
 from tuner.collectors import UsageCollector
 from tuner.config import Config
+from tuner.dashboard.csv import rematch
 from tuner.storage import repo
 from tuner.storage.locking import FileLock, LockBusy
 
@@ -96,6 +97,7 @@ def collect(conn: sqlite3.Connection, collectors: list[UsageCollector],
                     a.idle_gap_minutes)
                 repo.kv_set(conn, "attribution_rules", rules)
             repo.kv_set(conn, "last_collect", repo.now_iso())
+            rematch(conn)
     except LockBusy:
         stats.busy = True
         stats.messages.append("another collection is running; skipped")
