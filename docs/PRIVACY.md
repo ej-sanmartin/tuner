@@ -17,6 +17,10 @@ token counts, timings, hashes. It does **not** store full prompts,
 responses, tool outputs, or file contents. Hook events keep only an
 allow-list of fields (prompt *length*, never text).
 
+`report.html` re-reads each shown task's prompts from the transcript,
+redacts them, and embeds them so the task page can show what was typed.
+That file stays in Tuner's data directory.
+
 ## What a model may see
 
 Only the output of `tuner analyze evidence`, run by your own agent: the

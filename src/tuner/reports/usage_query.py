@@ -11,8 +11,13 @@ import json
 import sqlite3
 from collections import defaultdict
 
+from tuner.analysis.excerpts import prompt_text
 from tuner.attribution.tasks import synthetic_rule
 from tuner.reports import aggregate as agg
+
+# Re-read from the transcript for the task page. The database keeps
+# only a short preview. Longer prompts are clipped with a note.
+REPORT_PROMPT_LIMIT = 20_000
 
 # Estimates are hidden where a dashboard row matched that turn.
 USAGE = "usage_effective"
@@ -193,11 +198,17 @@ def load_timeline(conn: sqlite3.Connection, task_id: str, cap: int = 80
                  "t ON t.id = tt.turn_id WHERE tt.task_id=? ORDER BY t.seq")
     for r in conn.execute(sql_turns, (task_id,)):
         rule = synthetic_rule(r["prompt_preview"])
-        items.append({"kind": "system" if rule else "prompt", "ts": r["ts"],
-                      "text": rule or r["prompt_preview"][:160],
-                      "outcome": r["outcome"],
-            "ref": f"{r['source_path']}#L{r['source_line']}",
-            "_ln": r["source_line"]})
+        item = {"kind": "system" if rule else "prompt", "ts": r["ts"],
+                "text": rule or r["prompt_preview"][:160],
+                "outcome": r["outcome"],
+                "ref": f"{r['source_path']}#L{r['source_line']}",
+                "_ln": r["source_line"]}
+        if not rule:
+            full = prompt_text(r["source_path"], r["source_line"],
+                               REPORT_PROMPT_LIMIT)
+            if full:
+                item["full"] = full
+        items.append(item)
     sql_tools = ("SELECT k.ts, k.name, k.target, k.is_error, k.source_path, "
                  "k.source_line FROM task_turns tt JOIN tool_calls k ON "
                  "k.turn_id = tt.turn_id WHERE tt.task_id=? "

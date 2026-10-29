@@ -29,6 +29,7 @@ def compact_timeline(items: list[dict], root: str | None
     sources: dict[str, str] = {}
     out: list[dict] = []
     for it in items:
+        it.pop("full", None)  # report-only; evidence uses bounded excerpts
         it = {k: v for k, v in it.items() if v is not None}
         ref = it.get("ref")
         if ref:

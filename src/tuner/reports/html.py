@@ -11,6 +11,9 @@ from __future__ import annotations
 import json
 from importlib import resources
 
+# Concatenated in order into one script; report.js must come last.
+JS_FILES = ("md.js", "task.js", "report.js")
+
 _ESCAPES = {"<": "\\u003c", ">": "\\u003e", "&": "\\u0026",
             "\u2028": "\\u2028", "\u2029": "\\u2029"}
 
@@ -35,6 +38,7 @@ def render_html(usage: dict, analysis: dict | None = None,
     """Return the complete HTML document for the given report data."""
     page = _asset("report.html")
     page = page.replace("/*__CSS__*/", _asset("report.css"))
-    page = page.replace("/*__JS__*/", _asset("report.js"))
+    script = "\n".join(_asset(n) for n in JS_FILES)
+    page = page.replace("/*__JS__*/", script)
     data = {"usage": usage, "analysis": analysis, "skills": skills or []}
     return page.replace("/*__DATA__*/", safe_json(data))

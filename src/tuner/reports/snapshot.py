@@ -137,10 +137,9 @@ def build_snapshot(conn: sqlite3.Connection, cfg: Config, period: Period,
         "data_quality": data_quality(conn, period, tasks, usage),
         "pricing": {"meta": book.meta, "enabled": with_cost},
         "privacy": {
-            "contains": "redacted prompt previews (<=240 chars), tool "
-                        "names, file paths/commands (redacted), counts",
-            "excludes": "full prompts, responses, tool outputs, file "
-                        "contents",
+            "contains": "redacted prompts re-read from the transcript, "
+                        "tool names, file paths/commands (redacted), counts",
+            "excludes": "responses, tool outputs, file contents",
         },
     }
 

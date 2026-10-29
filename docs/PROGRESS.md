@@ -1,6 +1,6 @@
 # Progress
 
-Last updated 2026-10-28. 93 automated tests pass on macOS (strict
+Last updated 2026-10-28. 94 automated tests pass on macOS (strict
 encoding mode); ruff is clean.
 
 ## Done
