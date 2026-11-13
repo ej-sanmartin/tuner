@@ -119,7 +119,7 @@ const kv = (label, text) => text ? h("div", { class: "kv" }, h("span", {}, label
 function recs() {
   const el = h("div", {}, h("h1", {}, "Recommendations"));
   const rs = (A && A.recommendations) || [];
-  if (!A) return el.appendChild(h("p", { class: "muted" }, "No analysis yet. Run /tuner in Cursor or Claude Code (or `tuner analyze`).")), el;
+  if (!A) return el.appendChild(h("p", { class: "muted" }, "No analysis yet. Run /tuner in Cursor or Claude Code.")), el;
   if (!rs.length) el.append(h("p", { class: "muted" }, "The analysis found no change worth recommending."));
   rs.forEach((r) => el.append(h("div", { class: "card rec" },
     h("div", { class: "rec-h" }, h("strong", {}, r.title), h("span", { class: "pills" }, pill(r.kind),

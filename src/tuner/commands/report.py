@@ -81,10 +81,20 @@ def run(args) -> int:
     now = datetime.now(UTC)
     period = choose_period(cfg, args, now)
     result = gen.generate(conn, cfg, period, args.top, now)
+    from tuner.handoff import cli_hint, publish
+    from tuner.skills.history import pending_proposals
+    tasks = result.usage["overview"]["counts"]["tasks"]
+    pending = pending_proposals(conn) if tasks else []
+    if tasks:
+        publish(result.period_id, result.analysis_valid, pending)
     if args.json:
         emit_json(result.usage)
     else:
         print_summary(result.usage, result.html_path)
+        if tasks:
+            hint = cli_hint(result.analysis_valid, len(pending))
+            if hint:
+                print(hint)
     if args.open or cfg.delivery.open_automatically:
         open_file(result.html_path, cfg.delivery.opener)
     return 0

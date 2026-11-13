@@ -99,5 +99,6 @@ UTC at the edges, which keeps them contiguous across DST.
   edits. `paths.py`: platform dirs; `TUNER_HOME`/`TUNER_FAKE_HOME` for
   tests (OS schedulers are never touched under `TUNER_FAKE_HOME`).
 * `security/redact.py`: secrets masked before storage/export.
-* `hook_spool.py`: import-light; responds first, spools allow-listed
-  fields only, always exits 0.
+* `hook_spool.py`: import-light; responds before spooling, allow-listed
+  fields only, always exits 0. `sessionStart` reads `handoff.json` and
+  may add `additional_context` (skipped for background agents).

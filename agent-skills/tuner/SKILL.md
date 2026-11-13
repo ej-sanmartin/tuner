@@ -14,20 +14,22 @@ analysis silently: say plainly when you did or did not analyze.
 
 1. Run `tuner report` (collects new data, writes the report). Skip if the
    user only wants to analyze the latest existing report.
-2. Run `tuner analyze status --json`.
-   - `valid`: tell the user a cached analysis exists, run
-     `tuner analyze show`, summarize it, and stop. Re-analyze only if the
-     user asks (then run `tuner analyze refresh`).
-   - `stale` or `missing`: continue.
-3. Run `tuner analyze evidence` (add `--top N` or `--task ID` if asked).
-   Copy `cache_key` from it. Run `tuner analyze schema` for the output
-   format.
-4. Analyze each task in the bundle (do not skip tasks silently; list any
+2. Run `tuner analyze next` (add `--top N` or `--task ID` if asked).
+   - `status` is `valid`: summarize `analysis`. For each item in
+     `pending_skills`, offer `tuner skills apply ID` and stop. Do not
+     apply unless the user asks. Re-analyze only if they ask (then
+     `tuner analyze refresh`, then `tuner analyze next` again).
+   - `status` is `stale` or `missing`: `evidence` and `schema` are in
+     that same JSON. Continue.
+3. Analyze each task in `evidence` (do not skip tasks silently; list any
    you could not judge under `insufficient_evidence`).
-5. Write the analysis JSON to a temp file and run
+4. Write the analysis JSON to a temp file and run
    `tuner analyze save FILE --agent <cursor|claude-code> --model <model>`.
-   Fix any `invalid:` errors it prints and retry.
-6. Summarize the result and point to `tuner open`.
+   Use `cache_key` from step 2. Fix any `invalid:` errors it prints
+   and retry.
+5. Summarize the result and point to `tuner open`. If it prints
+   `pending skills`, offer `tuner skills apply ID` for each. Do not
+   apply unless the user asks.
 
 ## Rules
 

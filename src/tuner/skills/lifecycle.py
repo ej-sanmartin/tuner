@@ -191,6 +191,7 @@ def apply(conn: sqlite3.Connection, change_id: str) -> Path:
     _set(conn, change_id, status="applied", applied_at=_now(),
          backup_path=str(backup) if backup else None)
     _log({"event": "applied", "id": change_id, "path": str(target)})
+    _touch_inbox(conn)
     return target
 
 
@@ -199,6 +200,7 @@ def reject(conn: sqlite3.Connection, change_id: str) -> None:
     _row(conn, change_id)
     _set(conn, change_id, status="rejected")
     _log({"event": "rejected", "id": change_id})
+    _touch_inbox(conn)
 
 
 def rollback(conn: sqlite3.Connection, change_id: str,
@@ -223,6 +225,14 @@ def rollback(conn: sqlite3.Connection, change_id: str,
             pass
     _set(conn, change_id, status="rolled_back", rolled_back_at=_now())
     _log({"event": "rolled_back", "id": change_id, "path": str(target)})
+    _touch_inbox(conn)
+
+
+def _touch_inbox(conn: sqlite3.Connection) -> None:
+    """Refresh pending proposals on the agent handoff."""
+    from tuner.handoff import sync_pending
+    from tuner.skills.history import pending_proposals
+    sync_pending(pending_proposals(conn))
 
 
 def show_diff(conn: sqlite3.Connection, change_id: str) -> str:

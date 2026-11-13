@@ -36,7 +36,7 @@ function task(id) {
     notes.length ? fold("Estimate notes", h("ul", { class: "tight" }, notes.map((n) => h("li", {}, n)))) : null);
   el.append(h("h2", {}, "Prompts"), promptList(t));
   el.append(h("h2", {}, "Analysis"), a ? analysis(a)
-    : h("p", { class: "muted" }, "Not analyzed yet. Run /tuner in Cursor or Claude Code, or `tuner analyze`."));
+    : h("p", { class: "muted" }, "Not analyzed yet. Run /tuner in Cursor or Claude Code."));
   if (t.subagents.count) el.append(h("h2", {}, "Subagents"), subagents(t));
   el.append(h("h2", {}, "Tool activity"), toolTable(t.tools));
   el.append(fold(`Activity timeline (${(t.timeline || []).length} events)`, timeline(t.timeline)),

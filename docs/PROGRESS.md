@@ -86,7 +86,9 @@ encoding mode); ruff is clean.
   subagents are labelled by their first prompt, since Cursor stores no
   subagent type or description locally.
 * Scheduled runs cannot run analysis unattended (no in-process LLM by
-  design); they produce the report and a notification pointing to `/tuner`.
+  design). The notification says when the report is not analyzed yet and
+  how many skill proposals are waiting. A new Cursor session is told once
+  via `sessionStart`. `tuner analyze next` is the agent's single read.
 * Effectiveness is observational (before/after medians, sample sizes), never
   a causal claim.
 * Linux: paths and notifications are stubbed; no scheduler yet.

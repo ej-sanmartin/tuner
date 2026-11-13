@@ -2,8 +2,9 @@
 
 Kept deliberately tiny and import-light: it runs inside Cursor's agent
 loop. It never reads prompts' text (only their length), never touches
-SQLite, never hits the network, always exits 0, and always prints a valid
-response *before* doing any I/O so Cursor can never be blocked by us.
+SQLite, never hits the network, and always exits 0. The response is
+printed before the spool write. sessionStart may read one small handoff
+file first so that line can be included in the JSON.
 """
 
 from __future__ import annotations
@@ -67,16 +68,37 @@ def append(rec: dict) -> None:
         os.close(fd)
 
 
+def _response(event: str, payload: dict) -> dict:
+    """JSON for this event. sessionStart may add one context line."""
+    body = dict(RESPONSES.get(event, {}))
+    if event != "sessionStart" or payload.get("is_background_agent"):
+        return body
+    try:
+        from tuner.handoff import agent_context
+        line = agent_context()
+    except Exception:
+        return body
+    if line:
+        body["additional_context"] = line
+    return body
+
+
 def run_hook(event: str, stdin_text: str, out=None) -> int:
-    """Hook entry: respond immediately, then spool; swallow all errors."""
+    """Hook entry: respond, then spool; swallow all errors."""
     out = out or sys.stdout
     try:
-        out.write(json.dumps(RESPONSES.get(event, {})) + "\n")
+        payload = json.loads(stdin_text or "{}")
+    except Exception:
+        payload = {}
+    if not isinstance(payload, dict):
+        payload = {}
+    try:
+        out.write(json.dumps(_response(event, payload)) + "\n")
         out.flush()
     except Exception:
         pass
     try:
-        rec = build_record(event, json.loads(stdin_text or "{}"))
+        rec = build_record(event, payload)
         if rec:
             append(rec)
     except Exception:

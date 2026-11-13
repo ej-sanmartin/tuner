@@ -56,10 +56,13 @@ def run_due(conn: sqlite3.Connection, cfg: Config,
             if do_collect:
                 collect(conn, build_collectors(cfg), cfg, lock_timeout=60)
             results = []
+            from tuner.skills.history import pending_proposals
+            pending_n = len(pending_proposals(conn))
             for period in due(conn, cfg, now):
                 res = gen.generate(conn, cfg, period, now=now)
                 results.append(res)
-                _deliver(cfg, res, notifier, opener)
+                _deliver(cfg, res, notifier, opener, pending_n)
+            _note(conn, results)
             _record(conn, cfg, now, len(results))
             return results
     except LockBusy:
@@ -81,15 +84,29 @@ def _record(conn: sqlite3.Connection, cfg: Config, now: datetime,
     tick.write_next_due(periods.to_utc(nxt, r.timezone))
 
 
-def _deliver(cfg: Config, res: gen.ReportResult, notifier, opener) -> None:
+def _note(conn: sqlite3.Connection, results: list[gen.ReportResult]
+          ) -> None:
+    """Point the next session at the newest report that has tasks."""
+    from tuner.handoff import publish
+    from tuner.skills.history import pending_proposals
+    last = next((r for r in reversed(results)
+                 if r.usage["overview"]["counts"]["tasks"]), None)
+    if last is None:
+        return
+    publish(last.period_id, last.analysis_valid, pending_proposals(conn))
+
+
+def _deliver(cfg: Config, res: gen.ReportResult, notifier, opener,
+             pending_n: int) -> None:
     """Notify (and optionally open) a finished report."""
     ov = res.usage["overview"]
-    if not ov["counts"]["tasks"]:
+    tasks = ov["counts"]["tasks"]
+    if not tasks:
         return
     if cfg.delivery.notification:
-        msg = (f"{ov['tokens']['total']:,} tokens across "
-               f"{ov['counts']['tasks']} tasks. `tuner open`, then /tuner "
-               "in your agent to analyze.")
+        from tuner.handoff import notify_text
+        msg = notify_text(ov["tokens"]["total"], tasks, res.analysis_valid,
+                          pending_n)
         notifier(f"Tuner report ready ({res.period_id})", msg)
     if cfg.delivery.open_automatically:
         opener(res.html_path, cfg.delivery.opener)

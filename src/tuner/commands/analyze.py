@@ -22,8 +22,8 @@ def register(sub) -> None:
     """Register the subcommand."""
     p = sub.add_parser("analyze", help="evidence-backed analysis (cached)")
     p.add_argument("action", nargs="?", default="status", choices=(
-        "status", "evidence", "schema", "save", "show", "refresh", "list",
-        "clear"))
+        "status", "next", "evidence", "schema", "save", "show", "refresh",
+        "list", "clear"))
     p.add_argument("file", nargs="?", help="analysis JSON for `save` "
                    "(or - for stdin)")
     p.add_argument("--period", help="report period id (default: latest)")
@@ -105,6 +105,38 @@ def _save(conn, cfg, plan, args) -> int:
     print(f"saved analysis ({cov['analyzed']}/{cov['selected']} tasks, "
           f"{len(analysis['recommendations'])} recommendations) -> "
           f"{store.current_file(plan.period_id)}")
+    pending = _pending(conn)
+    if pending:
+        ids = ", ".join(p["id"] for p in pending)
+        print(f"pending skills: {ids}")
+        print("apply with `tuner skills apply ID`")
+    return 0
+
+
+def _pending(conn) -> list[dict]:
+    """Applyable skill proposals for the agent."""
+    from tuner.skills.history import pending_proposals
+    return pending_proposals(conn)
+
+
+def _next(conn, cfg, plan) -> int:
+    """Print the cached analysis, or evidence plus the output schema."""
+    state = store.status(conn, plan.period_id, plan.key)
+    info = {"period": plan.period_id, "status": state,
+            "cache_key": plan.key, "pending_skills": _pending(conn)}
+    if state == "valid":
+        info["analysis"] = json.loads(
+            store.current_file(plan.period_id).read_text(encoding="utf-8"))
+        info["next"] = ("summarize this analysis; offer `tuner skills "
+                        "apply ID` for each pending skill; re-analyze "
+                        "only if the user asks")
+    else:
+        info["tasks_selected"] = len(plan.selection)
+        info["evidence"] = service.bundle(conn, cfg, plan)
+        info["schema"] = TEMPLATE
+        info["next"] = ("analyze every selected task, then "
+                        "`tuner analyze save FILE`")
+    emit_json(info)
     return 0
 
 
@@ -140,8 +172,12 @@ def run(args) -> int:
         store.invalidate(conn, plan.period_id)
         render_report(conn, plan.directory, plan.usage,
                       plan.snapshot_hash, cfg.skills.track_effectiveness)
+        from tuner.handoff import publish_if_current
+        publish_if_current(plan.period_id, False, _pending(conn))
         print("cached analysis invalidated; run /tuner to recompute")
         return 0
+    if args.action == "next":
+        return _next(conn, cfg, plan)
     if args.action == "evidence":
         emit_json(service.bundle(conn, cfg, plan))
         return 0

@@ -114,4 +114,12 @@ def save_analysis(conn: sqlite3.Connection, cfg: Config, plan: Plan,
     store.save(conn, analysis, plan.selection)
     gen.render_report(conn, plan.directory, plan.usage, plan.snapshot_hash,
                        cfg.skills.track_effectiveness)
+    _publish(conn, plan.period_id, True)
     return analysis, warnings
+
+
+def _publish(conn: sqlite3.Connection, period_id: str, valid: bool) -> None:
+    """Refresh the agent handoff for this period."""
+    from tuner.handoff import publish_if_current
+    from tuner.skills.history import pending_proposals
+    publish_if_current(period_id, valid, pending_proposals(conn))
