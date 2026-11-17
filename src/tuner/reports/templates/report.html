@@ -53,6 +53,39 @@
   apply(false);
 })();
 </script>
+<script>
+// Phone nav. The button is hidden from 641px up; Escape and a route close it.
+document.addEventListener("DOMContentLoaded", function () {
+  var header = document.getElementById("top");
+  var btn = document.getElementById("menu");
+  var nav = document.getElementById("nav");
+  var wide = matchMedia("(min-width:641px)");
+  if (!header || !btn || !nav) return;
+  function setOpen(open) {
+    header.classList.toggle("nav-open", open);
+    btn.setAttribute("aria-expanded", open ? "true" : "false");
+    btn.setAttribute("aria-label", open ? "Close menu" : "Menu");
+  }
+  btn.addEventListener("click", function () {
+    setOpen(!header.classList.contains("nav-open"));
+  });
+  nav.addEventListener("click", function (e) {
+    if (e.target.closest("a")) setOpen(false);
+  });
+  document.addEventListener("click", function (e) {
+    if (!header.classList.contains("nav-open")) return;
+    if (e.target.closest("#nav") || e.target.closest("#menu")) return;
+    setOpen(false);
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") setOpen(false);
+  });
+  wide.addEventListener("change", function (e) {
+    if (e.matches) setOpen(false);
+  });
+  window.addEventListener("hashchange", function () { setOpen(false); });
+});
+</script>
 <style>
 /*__CSS__*/
 </style>
@@ -84,6 +117,15 @@
       -3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46
       .55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg></a>
     <button id="theme" class="icon" type="button" aria-label="Change theme"></button>
+    <button id="menu" class="icon menu" type="button" aria-label="Menu"
+      aria-expanded="false" aria-controls="nav"><svg class="bars"
+      viewBox="0 0 16 16" width="15" height="15" aria-hidden="true"><path
+      fill="none" stroke="currentColor" stroke-width="1.6"
+      stroke-linecap="round" d="M2.5 4h11M2.5 8h11M2.5 12h11"/></svg><svg
+      class="x" viewBox="0 0 16 16" width="15" height="15"
+      aria-hidden="true"><path fill="none" stroke="currentColor"
+      stroke-width="1.6" stroke-linecap="round"
+      d="M4 4l8 8M12 4l-8 8"/></svg></button>
   </div>
 </header>
 <main id="app"><p class="muted">Loading…</p></main>

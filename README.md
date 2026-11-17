@@ -1,6 +1,29 @@
-# Tuner
+<p align="center">
+  <img src="docs/tuner-mark.svg" width="72" height="72" alt="Tuner">
+</p>
 
-**Understand your AI usage. Tune your agent workflows.**
+<h1 align="center">Tuner</h1>
+
+<p align="center"><strong>Understand your AI usage. Tune your agent workflows.</strong></p>
+
+<p align="center">
+  <a href="https://github.com/ej-sanmartin/tuner/actions/workflows/ci.yml">
+    <img alt="CI"
+      src="https://github.com/ej-sanmartin/tuner/actions/workflows/ci.yml/badge.svg">
+  </a>
+  <a href="https://www.python.org/downloads/">
+    <img alt="Python 3.13 or newer"
+      src="https://img.shields.io/badge/python-3.13%2B-3776AB">
+  </a>
+  <a href="https://github.com/ej-sanmartin/tuner">
+    <img alt="macOS and Windows"
+      src="https://img.shields.io/badge/platform-macOS%20%7C%20Windows-555555">
+  </a>
+  <a href="LICENSE">
+    <img alt="MIT license"
+      src="https://img.shields.io/badge/license-MIT-b55238">
+  </a>
+</p>
 
 Tuner is a local-first tool that reads the session history of your coding
 agents (Cursor and Claude Code today), shows where your tokens went, and
