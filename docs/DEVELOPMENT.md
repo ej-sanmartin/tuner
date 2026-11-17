@@ -23,7 +23,9 @@ uv run tuner --help
 * The wheel force-includes `agent-skills/` as `tuner/_agent_skills`; keep
   `SKILL.md` valid per the Agent Skills spec.
 * CI (`.github/workflows/ci.yml`) runs lint, tests, and a wheel smoke test
-  on macOS and Windows.
+  on macOS and Windows. Changes only under `docs/**`, `README.md`, or
+  `AGENTS.md` do not start it. `agent-skills/` still does: the wheel
+  smoke test checks that `SKILL.md` is packaged.
 
 ## Versions, upgrades, and releases
 

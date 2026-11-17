@@ -3,7 +3,15 @@ name: ci
 on:
   push:
     branches: [main]
+    paths-ignore:
+      - "docs/**"
+      - "README.md"
+      - "AGENTS.md"
   pull_request:
+    paths-ignore:
+      - "docs/**"
+      - "README.md"
+      - "AGENTS.md"
 
 permissions:
   contents: read
