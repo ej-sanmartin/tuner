@@ -79,8 +79,8 @@ the report's Recommendations view. Re-running `/tuner` on unchanged data
 reuses the cache instead of spending tokens again.
 
 Reports land in `reports/<period>/{usage.json,analysis.json,report.html}`
-inside Tuner's data directory (`tuner open --path` prints the latest
-report's location). They are
+inside Tuner's data directory (`tuner open --path` prints the report
+generated most recently, including a custom `--since` window). They are
 generated every Sunday at 18:00 local time by default, with catch-up if the
 machine was off.
 
@@ -97,7 +97,7 @@ machine was off.
 | `tuner schedule` | install/inspect the OS job; `run` is idempotent |
 | `tuner pricing` | price lookups and deterministic cost math |
 | `tuner config` | show/edit validated TOML config |
-| `tuner open`, `tuner doctor` | open latest report; diagnostics |
+| `tuner open`, `tuner doctor` | open the report generated most recently; diagnostics |
 
 </details>
 

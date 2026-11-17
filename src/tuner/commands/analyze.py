@@ -26,7 +26,8 @@ def register(sub) -> None:
         "list", "clear"))
     p.add_argument("file", nargs="?", help="analysis JSON for `save` "
                    "(or - for stdin)")
-    p.add_argument("--period", help="report period id (default: latest)")
+    p.add_argument("--period", help="report period id (default: the "
+                   "report generated most recently)")
     p.add_argument("--top", type=int, help="analyze the top N tasks")
     p.add_argument("--task", action="append", help="analyze this task id")
     p.add_argument("--agent", default="unknown",

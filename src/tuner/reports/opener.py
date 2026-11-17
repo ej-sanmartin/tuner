@@ -11,11 +11,14 @@ from pathlib import Path
 
 
 def latest_report_dir(conn) -> Path | None:
-    """Directory of the most recently generated complete report."""
+    """Directory of the report written most recently.
+
+    Custom windows (`tuner report --since`) are stored as partial, so
+    ranking complete weeks first hid the report the user just built.
+    """
     row = conn.execute(
         "SELECT report_dir FROM report_periods ORDER BY "
-        "(status='complete') DESC, period_end DESC, generated_at DESC "
-        "LIMIT 1").fetchone()
+        "generated_at DESC, period_end DESC LIMIT 1").fetchone()
     return Path(row["report_dir"]) if row else None
 
 

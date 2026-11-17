@@ -1,4 +1,4 @@
-"""`tuner open`: open the latest report."""
+"""`tuner open`: open the report generated most recently."""
 
 from __future__ import annotations
 
@@ -8,7 +8,7 @@ from tuner.reports.opener import latest_report_dir, open_file
 
 def register(sub) -> None:
     """Register the subcommand."""
-    p = sub.add_parser("open", help="open the latest report")
+    p = sub.add_parser("open", help="open the most recently generated report")
     p.add_argument("--cursor", action="store_true",
                    help="open in Cursor instead of the default browser")
     p.add_argument("--path", action="store_true",
@@ -17,7 +17,7 @@ def register(sub) -> None:
 
 
 def run(args) -> int:
-    """Open or print the latest report path."""
+    """Open or print the most recently generated report."""
     cfg = load_config()
     directory = latest_report_dir(open_db())
     if directory is None or not (directory / "report.html").exists():
