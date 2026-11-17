@@ -45,7 +45,10 @@ function bar(t) {
 // Legend; with token totals it also shows each category's size.
 const legend = (t) => h("div", { class: "legend" }, CATS.map(([k, l, c]) =>
   h("span", {}, h("b", { style: `background:var(${c})` }), l, t ? h("em", {}, fmt(t[k])) : null)));
-const stat = (v, l) => h("div", { class: "stat" }, h("div", { class: "v" }, v), h("div", { class: "l" }, l));
+const stat = (v, l, extra) => h("div", { class: "stat" }, h("div", { class: "v" }, v),
+  h("div", { class: "l" }, l, extra ? [" ", extra] : null));
+// Compact quality marker; the label is in the tooltip.
+const qdot = (m, tip) => h("i", { class: "dot " + m, title: tip || m });
 function table(head, rows) {
   return h("div", { class: "tbl" }, h("table", {},
     h("thead", {}, h("tr", {}, head.map(([t, c]) => h("th", { class: c || "" }, t)))), h("tbody", {}, rows)));
@@ -55,37 +58,41 @@ const fold = (title, ...body) => h("details", { class: "fold" }, h("summary", {}
 
 function overview() {
   const o = U.overview, p = U.period, q = o.quality;
+  const chip = qpill(q);
+  chip.title = `${fmt(q.measured_tokens)} measured · ${fmt(q.estimated_tokens)} estimated` +
+    (o.cost && !o.cost.complete ? ". Cost is a lower bound: some models have no known rate." : "");
+  const gen = "generated " + U.generated_at.slice(0, 16).replace("T", " ") + " UTC";
   const el = h("div", {}, h("h1", {}, "Usage overview"),
-    h("div", { class: "sub" }, `${day(p.start)} → ${day(p.end)}`, p.partial ? pill("in progress") : null,
-      h("span", { class: "muted", title: p.timezone }, "generated " + U.generated_at.slice(0, 16).replace("T", " ") + " UTC")),
-    h("div", { class: "stats" },
-      stat(fmt(o.tokens.total), "total tokens"), stat(money(o.cost), "est. API-equivalent cost"),
-      stat(o.counts.tasks, "tasks"), stat(o.counts.sessions, "sessions"), stat(o.counts.repositories, "repositories")),
-    h("div", {}, bar(o.tokens), legend(o.tokens)),
-    h("div", { class: "qline" }, qpill(q), `${fmt(q.measured_tokens)} measured · ${fmt(q.estimated_tokens)} estimated`));
-  if (o.cost && !o.cost.complete) el.append(h("div", { class: "notice" }, "Cost is a lower bound: some models have no known rate."));
-  if (o.cost) el.append(fold("About these numbers", h("ul", { class: "tight" }, (o.cost.limitations || []).map((l) => h("li", {}, l)))));
-  el.append(h("h2", {}, "By agent"), table([["Agent"], ["Tasks", "n"], ["Tokens", "n"], ["Quality"]],
+    h("div", { class: "sub" }, h("span", { title: gen + " · " + p.timezone }, `${day(p.start)} → ${day(p.end)}`),
+      p.partial ? pill("in progress") : null, `${o.counts.repositories} repositories`),
+    h("div", { class: "stats" }, stat(fmt(o.tokens.total), "tokens"),
+      stat(money(o.cost), "est. cost", chip), stat(o.counts.tasks, "tasks"), stat(o.counts.sessions, "sessions")),
+    h("div", {}, h("div", { class: "lg" }, bar(o.tokens)), legend(o.tokens)));
+  U.data_quality.coverage_gaps.forEach((g) => el.append(h("div", { class: "notice" }, g.message)));
+  const byAgent = table([["Agent"], ["Tasks", "n"], ["Tokens", "n"], [""]],
     o.by_agent.map((a) => h("tr", {}, h("td", {}, a.agent), h("td", { class: "n" }, a.tasks),
-      h("td", { class: "n" }, fmt(a.total)), h("td", {}, pill(a.measurement, a.measurement))))));
-  el.append(h("h2", {}, "By model"), table([["Model"], ["Input", "n hide"], ["Output", "n hide"], ["Cache w", "n hide"], ["Cache r", "n hide"], ["Total", "n"], ["Quality"]],
-    o.by_model.map((m) => h("tr", {}, h("td", {}, m.model || "unknown"),
-      ...CATS.map(([k]) => h("td", { class: "n hide" }, fmt(m[k]))), h("td", { class: "n" }, fmt(m.total)),
-      h("td", {}, pill(m.measurement, m.measurement))))));
-  el.append(quality());
+      h("td", { class: "n" }, fmt(a.total)), h("td", {}, qdot(a.measurement)))));
+  const byModel = table([["Model"], ["Mix", "hide"], ["Tokens", "n"], [""]],
+    o.by_model.map((m) => h("tr", {}, h("td", {}, m.model || "unknown"), h("td", { class: "hide" }, bar(m)),
+      h("td", { class: "n" }, fmt(m.total)), h("td", {}, qdot(m.measurement)))));
+  el.append(h("div", { class: "two" }, h("div", {}, h("h2", {}, "By agent"), byAgent),
+    h("div", {}, h("h2", {}, "By model"), byModel)), details(o));
   return el;
 }
 
-function quality() {
+// One fold for the numbers' caveats and data-quality checks.
+function details(o) {
   const d = U.data_quality, r = d.reconciliation, el = h("div", {});
-  d.coverage_gaps.forEach((g) => el.append(h("div", { class: "notice" }, g.message)));
+  if (o.cost && (o.cost.limitations || []).length) {
+    el.append(h("ul", { class: "tight" }, o.cost.limitations.map((l) => h("li", {}, l))));
+  }
   el.append(h("p", {}, pill(r.reconciled ? "task totals match session totals" : "unattributed usage present", r.reconciled ? "measured" : "mixed"),
     h("span", { class: "muted" }, ` session ${fmt(r.session_total)} · attributed ${fmt(r.attributed)} · unattributed ${fmt(r.unattributed)} · unlinked subagent sessions ${r.unlinked_subagent_sessions}`)));
   if (d.collection_errors.length) {
     el.append(h("h3", {}, "Collection issues"), h("ul", { class: "tight" },
       d.collection_errors.map((e) => h("li", {}, `${e.message} (${e.files} file${e.files === 1 ? "" : "s"})`))));
   }
-  return fold("Data quality and coverage", el);
+  return fold("Details: cost caveats and data quality", el);
 }
 
 let topN = null;
@@ -93,7 +100,7 @@ function tasks() {
   topN = topN ?? Math.min(U.selection.top_n, U.tasks.length);
   const ctl = h("div", { class: "ctl" }, "Show top ",
     h("input", { type: "number", min: 1, max: U.tasks.length, value: topN }), ` of ${U.tasks.length} tasks`);
-  const head = [["#"], ["Task"], ["Tokens", "hide"], ["Total", "n"], ["Cost", "n"], ["Share", "n hide"], ["Quality", "hide"]];
+  const head = [["#"], ["Task"], ["Tokens", "hide"], ["Total", "n"], ["Cost", "n"], ["Share", "n hide"], [""]];
   const tbl = table(head, []), body = tbl.querySelector("tbody");
   const render = () => body.replaceChildren(...U.tasks.slice(0, topN).map(taskRow));
   ctl.querySelector("input").addEventListener("input", (ev) => {
@@ -101,18 +108,17 @@ function tasks() {
     render();
   });
   render();
-  return h("div", {}, h("h1", {}, "Expensive tasks"),
-    h("div", { class: "sub muted" }, "Ranked by tokens. Estimated counts are a relative proxy."), ctl, tbl, legend());
+  return h("div", {}, h("h1", {}, "Expensive tasks"), ctl, tbl, legend());
 }
 function taskRow(t) {
   return h("tr", { class: "click", onclick: () => { location.hash = "#/task/" + encodeURIComponent(t.id); } },
     h("td", { class: "muted" }, t.rank),
     h("td", { class: "t" }, h("div", { class: "ttl" }, cleanTitle(t.title)),
-      h("div", { class: "muted" }, [t.agent, t.repo].filter(Boolean).join(" · "), " ",
+      h("div", { class: "chips" }, [t.agent, t.repo].filter(Boolean).map((c) => h("span", { class: "chip" }, c)),
         taskAnalysis(t.id) ? pill("analyzed", "ok") : null)),
     h("td", { class: "hide" }, bar(t.tokens)), h("td", { class: "n" }, fmt(t.tokens.total)),
     h("td", { class: "n" }, money(t.cost)), h("td", { class: "n hide" }, pct(t.share_of_total)),
-    h("td", { class: "hide" }, qpill(t.quality)));
+    h("td", {}, qdot(t.quality.measurement, t.quality.measurement + " · " + t.quality.confidence)));
 }
 
 const kv = (label, text) => text ? h("div", { class: "kv" }, h("span", {}, label), h("p", {}, text)) : null;
@@ -123,13 +129,15 @@ function recs() {
   if (!rs.length) el.append(h("p", { class: "muted" }, "The analysis found no change worth recommending."));
   rs.forEach((r) => el.append(h("div", { class: "card rec" },
     h("div", { class: "rec-h" }, h("strong", {}, r.title), h("span", { class: "pills" }, pill(r.kind),
-      pill(r.scope === "none" ? "no destination" : r.scope), pill(r.confidence + " confidence"), pill(r.status || "proposed"))),
-    h("p", {}, r.description), kv("Impact", r.expected_impact), kv("Why", r.why_it_helps), kv("Action", r.proposed_action),
-    r.evidence && r.evidence.length ? fold("Evidence", list(r.evidence)) : null,
-    r.destination ? h("p", { class: "muted mono" }, "Destination: " + r.destination) : null,
+      pill(r.confidence + " confidence"), pill(r.status || "proposed"))),
+    h("p", {}, r.expected_impact || r.description),
     r.change_id && r.status === "proposed" ? h("p", { class: "mono" }, "Apply: tuner skills apply " + r.change_id) : null,
     r.note ? h("p", { class: "muted" }, "Note: " + r.note) : null,
-    r.diff ? fold("Diff preview", diffPre(r.diff)) : null)));
+    fold("Details", r.expected_impact ? h("p", {}, r.description) : null, kv("Scope", r.scope === "none" ? "no destination" : r.scope),
+      kv("Why", r.why_it_helps), kv("Action", r.proposed_action),
+      r.evidence && r.evidence.length ? [h("h3", {}, "Evidence"), list(r.evidence)] : null,
+      r.destination ? h("p", { class: "muted mono" }, "Destination: " + r.destination) : null,
+      r.diff ? [h("h3", {}, "Diff preview"), diffPre(r.diff)] : null))));
   (A.limitations || []).forEach((l) => el.append(h("p", { class: "muted" }, "Limitation: " + l)));
   return el;
 }

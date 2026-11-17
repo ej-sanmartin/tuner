@@ -71,7 +71,7 @@ function subagents(t) {
 }
 
 function toolTable(t) {
-  const rows = Object.entries(t.by_name).sort((x, y) => y[1].count - x[1].count).slice(0, 12)
+  const rows = Object.entries(t.by_name).sort((x, y) => y[1].count - x[1].count).slice(0, 8)
     .map(([n, v]) => h("tr", {}, h("td", { class: "mono" }, n), h("td", { class: "n" }, v.count),
       h("td", { class: "n" }, v.failed || "")));
   const el = h("div", {}, table([["Tool"], ["Calls", "n"], ["Failed", "n"]], rows));
