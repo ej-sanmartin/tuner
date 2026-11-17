@@ -65,6 +65,8 @@ def checks() -> list[dict]:
     add("collection errors", OK if not errs else WARN, str(errs))
     for c in build_collectors(cfg):
         found = c.discover()
+        if not found and getattr(c, "optional", False):
+            continue
         add(f"source: {c.name}", OK if found else WARN,
             "; ".join(str(p) for p in c.locations()) if found
             else "no data found")

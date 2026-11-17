@@ -19,7 +19,7 @@ class SessionRec:
     """One agent conversation (or one subagent run)."""
 
     id: str
-    agent: str  # claude_code | cursor
+    agent: str  # claude_code | cursor | opencode | open_webui | hermes
     native_id: str
     kind: str = "main"  # main | subagent
     parent_id: str | None = None

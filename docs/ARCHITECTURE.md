@@ -21,6 +21,10 @@ returned in `ParsedSource.errors`.
 * `claude*.py`: measured usage. De-duplicates streamed lines by
   `requestId`/`message.id`, skips replayed `uuid`s, makes subagent files
   child sessions linked to the spawning turn.
+* `opencode.py`, `open_webui.py`, `hermes.py`: measured tokens from
+  each app's local SQLite database, opened read-only. Session rollups are
+  not added on top of per-message rows. Ollama is the model host behind
+  these apps and is not collected on its own.
 * `cursor*.py`: transcripts + read-only `state.vscdb` enrichment + hook
   spool. Tokens are estimated (`cursor_estimate.py`) with documented
   methods and `KNOWN_GAPS`; if Cursor ever stores real counts they are used

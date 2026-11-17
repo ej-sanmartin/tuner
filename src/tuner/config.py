@@ -54,6 +54,12 @@ SCHEMA: dict[str, dict[str, Opt]] = {
         "repositories": Opt("str", "auto"),
         "cursor_state_db": Opt("bool", True),
         "extra_claude_dirs": Opt("list", []),
+        "opencode": Opt("bool", True),
+        "open_webui": Opt("bool", True),
+        "hermes": Opt("bool", True),
+        "extra_opencode_dbs": Opt("list", []),
+        "extra_webui_dbs": Opt("list", []),
+        "extra_hermes_dbs": Opt("list", []),
     },
     "attribution": {
         "link_followups": Opt("bool", True),

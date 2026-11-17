@@ -26,10 +26,11 @@
 </p>
 
 Tuner is a local-first tool that reads the session history of your coding
-agents (Cursor and Claude Code today), shows where your tokens went, and
-helps you turn the expensive patterns into better prompts, rules, and
-Agent Skills. It runs on macOS and Windows with Python 3.13 and has **no
-runtime dependencies, no cloud service, and no API key**.
+agents (Cursor, Claude Code, OpenCode, Open WebUI, and Hermes), shows
+where your tokens went, and helps you turn the expensive patterns into
+better prompts, rules, and Agent Skills. It runs on macOS and Windows with
+Python 3.13 and has **no runtime dependencies, no cloud service, and no
+API key**.
 
 > Status: alpha (0.1.0). See [docs/PROGRESS.md](docs/PROGRESS.md) for what
 > is done, what is verified, and what is not.
@@ -104,12 +105,13 @@ machine was off.
 ## What is measured and what is estimated
 
 Claude Code transcripts contain provider usage, so those numbers are
-**measured**. Cursor does not store token counts locally, so Cursor numbers
-are **estimates** (labelled, with a method, confidence, and known gaps) and
-are never mixed with measured data without saying so. Costs are
-API-equivalent estimates from versioned prices, not billing; unknown models
-produce an explicitly incomplete estimate. See
-[docs/DATA_SCHEMA.md](docs/DATA_SCHEMA.md).
+**measured**. OpenCode, Open WebUI, and Hermes keep token counts in a
+local database, so those numbers are measured too. Cursor does not store
+token counts locally, so Cursor numbers are **estimates** (labelled, with
+a method, confidence, and known gaps) and are never mixed with measured
+data without saying so. Costs are API-equivalent estimates from versioned
+prices, not billing; unknown models produce an explicitly incomplete
+estimate. See [docs/DATA_SCHEMA.md](docs/DATA_SCHEMA.md).
 
 ## Skills Tuner may create
 
