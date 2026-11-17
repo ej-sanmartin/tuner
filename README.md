@@ -84,6 +84,9 @@ report's location). They are
 generated every Sunday at 18:00 local time by default, with catch-up if the
 machine was off.
 
+<details>
+<summary>All commands</summary>
+
 | Command | Purpose |
 | --- | --- |
 | `tuner init` / `uninstall` | set up / remove everything Tuner installed |
@@ -95,6 +98,8 @@ machine was off.
 | `tuner pricing` | price lookups and deterministic cost math |
 | `tuner config` | show/edit validated TOML config |
 | `tuner open`, `tuner doctor` | open latest report; diagnostics |
+
+</details>
 
 ## What is measured and what is estimated
 
