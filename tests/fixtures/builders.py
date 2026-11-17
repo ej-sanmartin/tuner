@@ -3,9 +3,14 @@
 from __future__ import annotations
 
 import json
+import os
+from datetime import UTC, datetime
 from pathlib import Path
 
 U8 = "utf-8"
+# Cursor files have no timestamps. Keep them inside the October period
+# the pipeline tests query, so results do not depend on the clock.
+CURSOR_STAMP = datetime(2026, 10, 12, 12, tzinfo=UTC).timestamp()
 
 SID = "11111111-aaaa-bbbb-cccc-000000000001"
 CWD = "/work/demo-repo"
@@ -140,7 +145,10 @@ def build_cursor(home: Path, conv="22222222-aaaa-bbbb-cccc-000000000002"
         {"type": "turn_ended", "status": "success"},
     ]
     sub = [user("explore"), asst("explored")]
-    return {
+    files = {
         "main": _w(base / f"{conv}.jsonl", main),
         "sub": _w(base / "subagents" / "child-0001.jsonl", sub),
     }
+    for path in files.values():
+        os.utime(path, (CURSOR_STAMP, CURSOR_STAMP))
+    return files

@@ -34,6 +34,11 @@ runtime dependencies, no cloud service, and no API key**.
 > Status: alpha (0.1.0). See [docs/PROGRESS.md](docs/PROGRESS.md) for what
 > is done, what is verified, and what is not.
 
+<p align="center">
+  <img src="docs/overview.png" width="880"
+    alt="Tuner usage overview for one week">
+</p>
+
 ## Install
 
 ```sh
