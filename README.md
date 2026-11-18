@@ -54,6 +54,12 @@ API key**.
 | Open WebUI | Measured, from the local database |
 | Hermes | Measured, from the local database |
 
+Estimates are labelled with a method, a confidence, and known gaps, and
+are never mixed with measured counts without saying so. Costs are
+API-equivalent figures from versioned prices, not a bill; an unknown
+model stays an explicitly incomplete estimate. See
+[docs/DATA_SCHEMA.md](https://github.com/ej-sanmartin/tuner/blob/main/docs/DATA_SCHEMA.md).
+
 Using an agent that is not listed?
 [Request it](https://github.com/ej-sanmartin/tuner/issues/new?title=Agent%20request%3A%20),
 or add a collector. A new agent is one class registered in
@@ -136,17 +142,6 @@ default, with catch-up if the machine was off.
 | `tuner doctor` | diagnostics for sources, hooks, skill, and schedule |
 
 </details>
-
-## What is measured and what is estimated
-
-Claude Code transcripts contain provider usage, so those numbers are
-**measured**. OpenCode, Open WebUI, and Hermes keep token counts in a
-local database, so those numbers are measured too. Cursor does not store
-token counts locally, so Cursor numbers are **estimates** (labelled, with
-a method, confidence, and known gaps) and are never mixed with measured
-data without saying so. Costs are API-equivalent estimates from versioned
-prices, not billing; unknown models produce an explicitly incomplete
-estimate. See [docs/DATA_SCHEMA.md](https://github.com/ej-sanmartin/tuner/blob/main/docs/DATA_SCHEMA.md).
 
 ## Skills Tuner may create
 
