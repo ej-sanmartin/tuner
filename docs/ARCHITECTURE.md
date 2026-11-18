@@ -44,7 +44,8 @@ messages nobody typed (post-compaction summary, empty notification
 wrapper, background-task completion ping) join the previous task as
 `system_turns`, so the workflow that caused them keeps the cost. A prompt may carry
 a `continues` link to the previous task (previous turn interrupted/errored,
-or a short affirmation such as "yes ..." within `idle_gap_minutes`,
+or a short affirmation such as "yes ..." or plan approval such as
+"implement this" within `idle_gap_minutes`,
 default 30) with rule and gap;
 linked tasks share a `thread_id`. Task ids are `task:` + sha1 of the first
 turn id, so they are stable. Changing the grouping rules or config makes

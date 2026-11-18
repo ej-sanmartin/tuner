@@ -10,10 +10,11 @@ agent did for it, including subagents. Rules (recorded as task evidence):
    workflow that caused them keeps its cost.
 3. A prompt may be *linked* to the previous task as a continuation when
    the gap since that turn is within `idle_gap_minutes` (or unknown) and
-   either the previous turn was interrupted/errored or the prompt is a
-   short (<= followup_max_chars) affirmation ("yes", "ok go ahead", ...).
-   Short new requests are not links. The link carries rule and gap, and
-   tasks in a chain share a `thread_id` (the first task's id).
+   either the previous turn was interrupted/errored, or the prompt is a
+   short (<= followup_max_chars) affirmation ("yes", "ok go ahead", ...)
+   or plan approval ("implement this", "do the plan", ...). Extra words
+   keep it a new task. The link carries rule and gap, and tasks in a
+   chain share a `thread_id` (the first task's id).
 Task ids derive from the first turn id, so rescans never duplicate tasks.
 Subagent sessions have no tasks of their own; their usage is attributed to
 the parent turn that spawned them (see reports/usage_query.py).
@@ -28,11 +29,16 @@ import sqlite3
 from dataclasses import dataclass, field
 from datetime import datetime
 
-ATTRIBUTION_VERSION = "4"  # bump to regroup existing data on next collect
+ATTRIBUTION_VERSION = "5"  # bump to regroup existing data on next collect
 INTERRUPTED = ("interrupted", "error")
 AFFIRMATION = re.compile(
     r"^\W*(yes|yeah|yep|yup|y|ok|okay|sure|go ahead|do it|sounds good|"
     r"continue|proceed|lgtm)\b", re.I)
+# Exact short go-aheads to execute the plan just written. Extra words
+# ("implement this new parser") are a new request, not this rule.
+PLAN_APPROVAL = re.compile(
+    r"^\W*(implement (this|that|the plan)|build this|do the plan)\W*$",
+    re.I)
 # Cursor-injected user messages that no human typed (checked on previews).
 SYNTHETIC = (
     ("compaction_summary", re.compile(r"^<available_subagent_types>")),
@@ -85,9 +91,13 @@ def _continuation(prev: sqlite3.Row, turn: sqlite3.Row,
         return None
     if prev["outcome"] in INTERRUPTED:
         return "interrupted_previous", gap
-    if turn["prompt_chars"] <= max_chars and \
-            AFFIRMATION.search(turn["prompt_preview"] or ""):
+    if turn["prompt_chars"] > max_chars:
+        return None
+    text = turn["prompt_preview"] or ""
+    if AFFIRMATION.search(text):
         return "affirmation", gap
+    if PLAN_APPROVAL.search(text):
+        return "plan_approval", gap
     return None
 
 

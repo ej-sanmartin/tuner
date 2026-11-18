@@ -80,8 +80,9 @@ encoding mode); ruff is clean.
   on real data). Claude Code has equivalents (compaction summaries, slash
   commands) that are not handled yet and could not be tested here.
 * Continuation links are only for short affirmations ("yes ...", "ok go
-  ahead") or after an interrupted turn; an English word list, so other
-  languages are never linked (safe default).
+  ahead"), exact plan approvals ("implement this", "do the plan"), or
+  after an interrupted turn; an English word list, so other languages
+  are never linked (safe default).
 * Subagent tree is one level deep (matches both collectors). Cursor
   subagents are labelled by their first prompt, since Cursor stores no
   subagent type or description locally.

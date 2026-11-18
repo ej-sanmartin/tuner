@@ -39,7 +39,8 @@ has `continues` ({task_id, rule, gap_minutes} or null), `thread_id` and
 ## `analysis.json` (`schema_version` 1, `kind: tuner.analysis`)
 
 `cache_key`, `snapshot_hash`, `produced_by`, `coverage {selected,analyzed}`,
-`tasks[]` (objective, summary, what_happened, classification into
+`tasks[]` (title of at most 80 characters, objective, summary,
+what_happened, classification into
 `productive_complexity` / `avoidable_overhead` / `insufficient_evidence`,
 injected `cost`), `recommendations[]` (kind, scope, confidence, evidence
 with refs, status set by Tuner, destination and diff for skill changes),

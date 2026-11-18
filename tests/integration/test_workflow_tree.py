@@ -119,3 +119,22 @@ def test_only_short_affirmations_are_linked_not_short_new_requests():
     t = group_turns("s", rows, True, 80, 30)
     assert [x.continues["rule"] if x.continues else None for x in t] == [
         None, "affirmation", None, "affirmation", None]
+
+
+def test_plan_approval_is_a_link_and_extra_words_are_not():
+    def row(i, preview, minute, chars=None):
+        r = _turn(i, f"2026-10-12T10:{minute:02d}:00Z",
+                  f"2026-10-12T10:{minute:02d}:30Z",
+                  len(preview) if chars is None else chars, "completed")
+        r["prompt_preview"] = preview
+        return r
+
+    rows = [row("a", "add a settings page", 0),
+            row("b", "implement this!", 2),
+            row("c", "implement this new parser", 4),
+            row("d", "do the plan", 6),
+            row("e", "implement this", 8, 81),
+            row("f", "yes on this plan, it should improve the base", 10)]
+    t = group_turns("s", rows, True, 80, 30)
+    assert [x.continues["rule"] if x.continues else None for x in t] == [
+        None, "plan_approval", None, "plan_approval", None, "affirmation"]

@@ -11,15 +11,43 @@ from pathlib import Path
 
 
 def latest_report_dir(conn) -> Path | None:
-    """Directory of the report written most recently.
-
-    Custom windows (`tuner report --since`) are stored as partial, so
-    ranking complete weeks first hid the report the user just built.
-    """
+    """Directory of the report written most recently, any status."""
     row = conn.execute(
         "SELECT report_dir FROM report_periods ORDER BY "
         "generated_at DESC, period_end DESC LIMIT 1").fetchone()
     return Path(row["report_dir"]) if row else None
+
+
+def scheduled_report_dir(conn) -> Path | None:
+    """Directory of the latest finished scheduled period.
+
+    Complete rows are scheduled windows. Partial rows are custom
+    windows and in-progress periods.
+    """
+    row = conn.execute(
+        "SELECT report_dir FROM report_periods WHERE status='complete' "
+        "ORDER BY period_end DESC, generated_at DESC LIMIT 1").fetchone()
+    return Path(row["report_dir"]) if row else None
+
+
+def report_to_open(conn, generated: bool = False
+                   ) -> tuple[Path | None, str | None]:
+    """(directory, note) for `tuner open`.
+
+    The default is the latest finished period. `generated` selects the
+    file written most recently. With no finished period, the newest
+    file is used and `note` says so.
+    """
+    if generated:
+        return latest_report_dir(conn), None
+    scheduled = scheduled_report_dir(conn)
+    if scheduled is not None:
+        return scheduled, None
+    latest = latest_report_dir(conn)
+    if latest is None:
+        return None, None
+    return latest, ("no finished scheduled report; "
+                    "opening the latest generated one")
 
 
 def open_file(path: Path, opener: str = "default") -> str:

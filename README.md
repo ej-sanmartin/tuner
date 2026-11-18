@@ -68,22 +68,35 @@ prints the two commands to run instead.
 ## Use
 
 ```sh
-tuner report --open      # collect new usage, build and open the report
+tuner report --open      # collect, build, and open that report
+tuner open               # latest finished scheduled report
+tuner open --generated   # the report written most recently
 tuner doctor             # check sources, hooks, skill, schedule
 ```
 
 Then, in Cursor or Claude Code, run **`/tuner`**. The agent reads a
 redacted evidence bundle, explains *why* the expensive tasks were
 expensive (productive complexity vs avoidable overhead vs insufficient
-evidence), and proposes improvements. The result is cached and appears in
-the report's Recommendations view. Re-running `/tuner` on unchanged data
-reuses the cache instead of spending tokens again.
+evidence), and proposes improvements. For each task it also writes a
+title of at most 80 characters. The expensive-tasks list and the task
+heading show that label; the prompt text stays on the task page. The
+result is cached and appears in the report's Recommendations view.
+Re-running `/tuner` on unchanged data reuses the cache instead of
+spending tokens again.
+
+Each human prompt is its own task, so per-prompt cost stays visible. A
+short follow-up in the same sitting is linked, not merged: an
+affirmation (`yes`, `go ahead`) or an exact plan approval (`implement
+this`, `implement the plan`, `build this`, `do the plan`). Extra words,
+as in `implement this new parser`, stay a new task.
 
 Reports land in `reports/<period>/{usage.json,analysis.json,report.html}`
-inside Tuner's data directory (`tuner open --path` prints the report
-generated most recently, including a custom `--since` window). They are
-generated every Sunday at 18:00 local time by default, with catch-up if the
-machine was off.
+inside Tuner's data directory. `tuner open` opens the latest finished
+scheduled report. `tuner open --generated` (and `tuner report --open`)
+opens the report just written, including a custom `--since` window. If
+no finished report exists yet, `tuner open` uses that newest file and
+says so. Reports are generated every Sunday at 18:00 local time by
+default, with catch-up if the machine was off.
 
 <details>
 <summary>All commands</summary>
@@ -98,7 +111,8 @@ machine was off.
 | `tuner schedule` | install/inspect the OS job; `run` is idempotent |
 | `tuner pricing` | price lookups and deterministic cost math |
 | `tuner config` | show/edit validated TOML config |
-| `tuner open`, `tuner doctor` | open the report generated most recently; diagnostics |
+| `tuner open` | latest finished scheduled report; `--generated` for the one just written |
+| `tuner doctor` | diagnostics for sources, hooks, skill, and schedule |
 
 </details>
 

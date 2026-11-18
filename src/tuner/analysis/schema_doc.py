@@ -4,6 +4,7 @@ TEMPLATE = {
     "cache_key": "<copy from evidence bundle>",
     "tasks": [{
         "task_id": "<id from evidence>",
+        "title": "imperative label, 80 characters or fewer",
         "objective": "what the user was trying to accomplish",
         "summary": "1-3 sentences on how the work went",
         "what_happened": [

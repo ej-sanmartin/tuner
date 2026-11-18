@@ -103,6 +103,14 @@ def _refs(ctx: _Ctx, where: str, refs, task_id: str | None) -> list[str]:
     return good
 
 
+def _label(ctx: _Ctx, where: str, value) -> str:
+    """Task-list title: required, and at most 80 characters."""
+    if isinstance(value, str) and len(_CTRL.sub("", value).strip()) > 80:
+        ctx.err(where, "must be 80 characters or fewer")
+        return ""
+    return ctx.text(where, value, True, 80)
+
+
 def _task(ctx: _Ctx, i: int, raw: dict, selection: set[str]) -> dict | None:
     """One task analysis."""
     w = f"tasks[{i}]"
@@ -113,6 +121,7 @@ def _task(ctx: _Ctx, i: int, raw: dict, selection: set[str]) -> dict | None:
     cls = raw.get("classification") or {}
     return {
         "task_id": tid,
+        "title": _label(ctx, f"{w}.title", raw.get("title")),
         "objective": ctx.text(f"{w}.objective", raw.get("objective"), True),
         "summary": ctx.text(f"{w}.summary", raw.get("summary"), True),
         "what_happened": _claims(ctx, f"{w}.what_happened",

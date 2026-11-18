@@ -32,6 +32,11 @@ function cleanTitle(s, n = 80) {
   if (s.length <= n) return s || "Untitled task";
   return s.slice(0, n).replace(/\s+\S*$/, "") + "…";
 }
+// The task list uses the analysis label when one exists.
+function taskLabel(t) {
+  const a = taskAnalysis(t.id);
+  return (a && a.title) || cleanTitle(t.title);
+}
 const pill = (text, cls) => h("span", { class: "pill " + (cls || "") }, text);
 const qpill = (q) => pill(q.measurement + " · " + q.confidence, q.measurement);
 const CATS = [["input_tokens", "input", "--c-in"], ["output_tokens", "output", "--c-out"],
@@ -113,7 +118,7 @@ function tasks() {
 function taskRow(t) {
   return h("tr", { class: "click", onclick: () => { location.hash = "#/task/" + encodeURIComponent(t.id); } },
     h("td", { class: "muted" }, t.rank),
-    h("td", { class: "t" }, h("div", { class: "ttl" }, cleanTitle(t.title)),
+    h("td", { class: "t" }, h("div", { class: "ttl", title: t.title }, taskLabel(t)),
       h("div", { class: "chips" }, [t.agent, t.repo].filter(Boolean).map((c) => h("span", { class: "chip" }, c)),
         taskAnalysis(t.id) ? pill("analyzed", "ok") : null)),
     h("td", { class: "hide" }, bar(t.tokens)), h("td", { class: "n" }, fmt(t.tokens.total)),

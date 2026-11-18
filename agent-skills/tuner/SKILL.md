@@ -27,9 +27,10 @@ analysis silently: say plainly when you did or did not analyze.
    `tuner analyze save FILE --agent <cursor|claude-code> --model <model>`.
    Use `cache_key` from step 2. Fix any `invalid:` errors it prints
    and retry.
-5. Summarize the result and point to `tuner open`. If it prints
-   `pending skills`, offer `tuner skills apply ID` for each. Do not
-   apply unless the user asks.
+5. Summarize the result and point to `tuner open` (latest finished
+   scheduled report; `tuner open --generated` is the one just written).
+   If it prints `pending skills`, offer `tuner skills apply ID` for
+   each. Do not apply unless the user asks.
 
 ## Rules
 
@@ -39,6 +40,9 @@ analysis silently: say plainly when you did or did not analyze.
 - Every claim and recommendation must cite evidence refs from the bundle
   (`S#` signals, `T#` timeline items, `P#` prompts). Without evidence, put
   it under `insufficient_evidence`.
+- For each task, set `title` to an imperative label of at most 80
+  characters. The task list shows this label. The raw prompt stays as
+  stored; do not paste it into `title`.
 - Separate three things for each task: **productive complexity** (work
   that was genuinely needed), **avoidable overhead** (waste a better
   workflow could avoid), and **insufficient evidence**. Large token counts

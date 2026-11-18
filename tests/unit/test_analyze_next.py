@@ -3,10 +3,12 @@
 import json
 from datetime import UTC, datetime
 
+import pytest
 from fixtures.builders import build_claude
 
 from tuner import config, handoff
 from tuner.analysis import service
+from tuner.analysis.validate import AnalysisError
 from tuner.collect import collect
 from tuner.collectors import build_collectors
 from tuner.commands.analyze import _next
@@ -39,7 +41,8 @@ def _doc(plan) -> dict:
     """Minimal valid analysis that proposes one skill."""
     tid = plan.selection[0]
     return {"cache_key": plan.key, "tasks": [{
-        "task_id": tid, "objective": "fix a test", "summary": "ok",
+        "task_id": tid, "title": "Fix the failing test",
+        "objective": "fix a test", "summary": "ok",
         "classification": {"productive_complexity": ["real work"]}}],
         "recommendations": [{
             "title": "Add a test-fix skill", "kind": "skill",
@@ -67,3 +70,16 @@ def test_next_then_save_surfaces_the_proposal(env, conn, capsys):
     assert saved["pending_skills"][0]["skill_name"] == "fix-tests"
     assert saved["pending_skills"][0]["apply"].startswith(
         "tuner skills apply ")
+    assert saved["analysis"]["tasks"][0]["title"] == "Fix the failing test"
+
+
+def test_task_title_is_required_and_at_most_80_chars(env, conn):
+    cfg, plan = _plan(env, conn)
+    missing = _doc(plan)
+    del missing["tasks"][0]["title"]
+    with pytest.raises(AnalysisError, match="title: required"):
+        service.save_analysis(conn, cfg, plan, missing, {"agent": "test"})
+    long = _doc(plan)
+    long["tasks"][0]["title"] = "x" * 81
+    with pytest.raises(AnalysisError, match="80 characters"):
+        service.save_analysis(conn, cfg, plan, long, {"agent": "test"})

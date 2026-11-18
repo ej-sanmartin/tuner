@@ -53,7 +53,8 @@ def analysis_doc(plan, with_skill=True, **over):
     if with_skill:
         rec["skill_change"] = {"name": "fix-tests", "content": GOOD}
     doc = {"cache_key": plan.key, "tasks": [{
-        "task_id": tid, "objective": "fix a test", "summary": "ok",
+        "task_id": tid, "title": "Fix the failing test",
+        "objective": "fix a test", "summary": "ok",
         "classification": {"productive_complexity": ["real work"]}}],
         "recommendations": [rec]}
     doc.update(over)

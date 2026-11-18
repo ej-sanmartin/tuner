@@ -24,7 +24,7 @@ function task(id) {
     t.cost ? t.cost.limitations.join("; ") : ""].filter(Boolean);
   const failed = t.tools.failed ? ` · ${t.tools.failed} failed` : "";
   const el = h("div", {}, h("a", { class: "back", href: "#/tasks" }, "← Expensive tasks"),
-    h("h1", { title: t.title }, cleanTitle(t.title, 90)),
+    h("h1", { title: t.title }, taskLabel(t)),
     h("div", { class: "sub" }, [t.agent, t.repo || "unknown repo", models,
       day(t.started_at) || "date approximate"].join(" · "), pill("outcome " + t.outcome),
       t.grouping.continues ? pill("continues earlier task") : null),
