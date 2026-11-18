@@ -12,6 +12,7 @@ on:
       - "docs/**"
       - "README.md"
       - "AGENTS.md"
+  workflow_call:  # reused by release.yml before publishing
 
 permissions:
   contents: read
@@ -40,14 +41,7 @@ jobs:
           uv build
           uv tool install --force dist/*.whl
           tuner --version
-          python - <<'PY'
-          import glob, zipfile
-          names = zipfile.ZipFile(glob.glob("dist/*.whl")[0]).namelist()
-          for needed in ("tuner/_agent_skills/tuner/SKILL.md",
-                         "tuner/reports/templates/report.html",
-                         "tuner/pricing/data/pricing_snapshot.json"):
-              assert needed in names, needed
-          PY
+          uv run python scripts/check_wheel.py dist
         env:
           TUNER_HOME: ${{ runner.temp }}/tuner-ci
           TUNER_FAKE_HOME: ${{ runner.temp }}/home-ci

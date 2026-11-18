@@ -1,5 +1,5 @@
 [build-system]
-requires = ["hatchling>=1.25"]
+requires = ["hatchling>=1.27"]
 build-backend = "hatchling.build"
 
 [project]
@@ -7,21 +7,28 @@ name = "agent-tuner"
 dynamic = ["version"]
 description = "Understand your AI usage. Tune your agent workflows."
 readme = "README.md"
-license = { text = "MIT" }
+license = "MIT"
+license-files = ["LICENSE"]
 requires-python = ">=3.13"
 authors = [{ name = "Tuner contributors" }]
 keywords = ["ai", "agents", "cursor", "claude-code", "token-usage", "skills"]
 classifiers = [
-  "Development Status :: 3 - Alpha",
+  "Development Status :: 5 - Production/Stable",
   "Environment :: Console",
   "Intended Audience :: Developers",
-  "License :: OSI Approved :: MIT License",
   "Operating System :: MacOS",
   "Operating System :: Microsoft :: Windows",
   "Programming Language :: Python :: 3.13",
 ]
 # Zero runtime dependencies on purpose; tzdata only for Windows zoneinfo.
 dependencies = ["tzdata; sys_platform == 'win32'"]
+
+[project.urls]
+Homepage = "https://github.com/ej-sanmartin/tuner"
+Source = "https://github.com/ej-sanmartin/tuner"
+Issues = "https://github.com/ej-sanmartin/tuner/issues"
+Documentation = "https://github.com/ej-sanmartin/tuner/tree/main/docs"
+Changelog = "https://github.com/ej-sanmartin/tuner/blob/main/CHANGELOG.md"
 
 [project.scripts]
 tuner = "tuner.cli:main"

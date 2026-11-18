@@ -1,0 +1,67 @@
+# Publishes to PyPI when a version tag is pushed, for example v1.0.0.
+# One-time setup:
+#  1. https://pypi.org/manage/account/publishing/ : add a pending
+#     publisher: project agent-tuner, owner ej-sanmartin, repository
+#     tuner, workflow release.yml, environment pypi.
+#  2. GitHub > Settings > Environments: create `pypi` (optionally with
+#     required reviewers as a last gate before upload).
+# No API token. Do not also upload that same version by hand.
+# Release: bump __version__ in src/tuner/__init__.py, update
+# CHANGELOG.md, merge, then `git tag v<version> && git push --tags`.
+name: release
+
+on:
+  push:
+    tags: ["v[0-9]+.[0-9]+.[0-9]+"]
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    uses: ./.github/workflows/ci.yml
+
+  build:
+    needs: ci
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.13"
+      - name: Tag matches the package version
+        run: |
+          version=$(sed -n 's/^__version__ = "\(.*\)"/\1/p' \
+            src/tuner/__init__.py | head -1)
+          test -n "$version"
+          test "${GITHUB_REF_NAME#v}" = "$version"
+      - run: uv build
+      - run: uv run --no-project python scripts/check_wheel.py dist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/project/agent-tuner/
+    permissions:
+      id-token: write      # PyPI trusted publishing + attestations
+      attestations: write
+      contents: write      # GitHub release
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      # Skip files already on PyPI so a failed GitHub release can re-run.
+      - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          skip-existing: true
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
+          generate_release_notes: true

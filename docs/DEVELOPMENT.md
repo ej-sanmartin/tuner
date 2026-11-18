@@ -40,5 +40,10 @@ uv run tuner --help
   into a temp dir, then use `UV_TOOL_DIR`, `UV_TOOL_BIN_DIR`,
   `UV_FIND_LINKS=<dir> UV_NO_INDEX=1`, `TUNER_HOME`, and `TUNER_FAKE_HOME`
   with `uv tool install agent-tuner` / `tuner upgrade`.
-* Release: bump the version, `uv build`, publish; `tuner upgrade` picks it
-  up from the index.
+* Release: bump `__version__`, add a `CHANGELOG.md` entry, merge to
+  `main`, then `git tag v<version> && git push --tags`.
+  `.github/workflows/release.yml` re-runs CI, checks the tag equals the
+  version, builds, checks the wheel and sdist (`scripts/check_wheel.py`),
+  publishes to PyPI by trusted publishing (environment `pypi`, no token),
+  and creates the GitHub release. `tuner upgrade` picks it up from the
+  index. Setup steps are at the top of the workflow file.

@@ -8,13 +8,9 @@
   notifications.
 - (Deferred) Live `/tuner` run in Cursor and Claude Code, compact evidence
   mode, skill-text tuning.
-- (Deferred) PyPI publish + release workflow, then test `tuner upgrade`
-  against the real index.
+- After the first PyPI release, test `tuner upgrade` against the real
+  index.
 - Possible: Claude Code `SessionEnd` hook to tick like Cursor hooks.
-- Before publishing: `init` writes every default into config.toml, which
-  pins old defaults and breaks on renamed keys (hit when `merge_followups`
-  became `link_followups`). Write only non-default keys, or add a rename
-  migration in `sync`.
 - Thread rollups (sum tokens across a `thread_id`) in `usage.json`/HTML.
 - Hold out a new dashboard week (`tuner import cursor --fetch`, then
   `doctor`) and re-fit only if the error moved. Per-model system prompt

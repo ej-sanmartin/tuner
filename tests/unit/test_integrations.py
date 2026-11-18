@@ -79,6 +79,15 @@ def test_config_set_preserves_comments_and_validates(env):
         config.set_value("privacy", "redact_patterns", "(unclosed")
 
 
+def test_default_config_pins_nothing(env):
+    config.write_default()
+    path = config.paths.config_file()
+    assert config.tomllib.loads(path.read_text(U8)) == {}
+    config.set_value("report", "top_n", "7")
+    assert config.tomllib.loads(path.read_text(U8)) == {
+        "report": {"top_n": 7}}
+
+
 def test_redaction_builtin_and_user_patterns():
     text = ("token=ghp_abcdefghijklmnopqrstuvwxyz0123 "
             "postgres://u:hunter2@db/x ACME-12345")

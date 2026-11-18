@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/tuner-mark.svg" width="72" height="72" alt="Tuner">
+  <img src="https://raw.githubusercontent.com/ej-sanmartin/tuner/main/docs/tuner-mark.svg" width="72" height="72" alt="Tuner">
 </p>
 
 <h1 align="center">Tuner</h1>
@@ -19,7 +19,7 @@
     <img alt="macOS and Windows"
       src="https://img.shields.io/badge/platform-macOS%20%7C%20Windows-555555">
   </a>
-  <a href="LICENSE">
+  <a href="https://github.com/ej-sanmartin/tuner/blob/main/LICENSE">
     <img alt="MIT license"
       src="https://img.shields.io/badge/license-MIT-b55238">
   </a>
@@ -32,11 +32,11 @@ better prompts, rules, and Agent Skills. It runs on macOS and Windows with
 Python 3.13 and has **no runtime dependencies, no cloud service, and no
 API key**.
 
-> Status: alpha (0.1.0). See [docs/PROGRESS.md](docs/PROGRESS.md) for what
+> Status: 1.0.0. See [docs/PROGRESS.md](https://github.com/ej-sanmartin/tuner/blob/main/docs/PROGRESS.md) for what
 > is done, what is verified, and what is not.
 
 <p align="center">
-  <img src="docs/overview.png" width="880"
+  <img src="https://raw.githubusercontent.com/ej-sanmartin/tuner/main/docs/overview.png" width="880"
     alt="Tuner usage overview for one week">
 </p>
 
@@ -125,7 +125,7 @@ token counts locally, so Cursor numbers are **estimates** (labelled, with
 a method, confidence, and known gaps) and are never mixed with measured
 data without saying so. Costs are API-equivalent estimates from versioned
 prices, not billing; unknown models produce an explicitly incomplete
-estimate. See [docs/DATA_SCHEMA.md](docs/DATA_SCHEMA.md).
+estimate. See [docs/DATA_SCHEMA.md](https://github.com/ej-sanmartin/tuner/blob/main/docs/DATA_SCHEMA.md).
 
 ## Skills Tuner may create
 
@@ -133,7 +133,7 @@ Modes (`tuner config set skills.mode review`): `suggest` (record only),
 `review` (default; you apply with `tuner skills apply ID`), `auto` (small,
 validated changes only). Tuner only edits skills it created, backs up
 before writing, detects conflicts, supports `tuner skills rollback`, and
-never runs `git add` or `git commit`. See [docs/PRIVACY.md](docs/PRIVACY.md).
+never runs `git add` or `git commit`. See [docs/PRIVACY.md](https://github.com/ej-sanmartin/tuner/blob/main/docs/PRIVACY.md).
 
 ## Privacy in one paragraph
 
@@ -144,9 +144,9 @@ secrets. The model only sees what `tuner analyze evidence` prints.
 
 ## Docs
 
-[Research](docs/RESEARCH.md) · [Architecture](docs/ARCHITECTURE.md) ·
-[Data schema](docs/DATA_SCHEMA.md) · [Privacy](docs/PRIVACY.md) ·
-[Development](docs/DEVELOPMENT.md) · [Progress](docs/PROGRESS.md)
+[Research](https://github.com/ej-sanmartin/tuner/blob/main/docs/RESEARCH.md) · [Architecture](https://github.com/ej-sanmartin/tuner/blob/main/docs/ARCHITECTURE.md) ·
+[Data schema](https://github.com/ej-sanmartin/tuner/blob/main/docs/DATA_SCHEMA.md) · [Privacy](https://github.com/ej-sanmartin/tuner/blob/main/docs/PRIVACY.md) ·
+[Development](https://github.com/ej-sanmartin/tuner/blob/main/docs/DEVELOPMENT.md) · [Progress](https://github.com/ej-sanmartin/tuner/blob/main/docs/PROGRESS.md)
 
 ## License
 

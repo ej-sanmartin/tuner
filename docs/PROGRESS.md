@@ -46,7 +46,7 @@ encoding mode); ruff is clean.
   following the skill's steps, which exposed and fixed a `save`/`--top`
   mismatch. Evidence for one large task is ~50 KB, so analyzing many
   tasks is token-heavy; consider a compact mode.
-* Published package: nothing uploaded to PyPI, so `tuner upgrade` for PyPI
+* Published package: until 1.0.0 is on PyPI, `tuner upgrade` for PyPI
   installs is only tested against local wheels.
 
 ## Known limitations

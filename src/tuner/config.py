@@ -197,11 +197,17 @@ def _literal(value: Any) -> str:
 
 
 def render_defaults() -> str:
-    """Render the full default configuration as commented TOML."""
-    lines = ["# Tuner configuration. See docs/DEVELOPMENT.md for details."]
+    """Render every default as a commented-out TOML template.
+
+    Nothing is pinned: a default changed or renamed in a later release
+    reaches existing installs until the user uncomments or sets a key.
+    """
+    lines = ["# Tuner configuration. Defaults are commented out; uncomment",
+             "# or use `tuner config set` to override one. `tuner config",
+             "# show` prints the effective values."]
     for section, opts in SCHEMA.items():
-        lines += ["", f"[{section}]"]
-        lines += [f"{k} = {_literal(o.default)}" for k, o in opts.items()]
+        lines += ["", f"# [{section}]"]
+        lines += [f"# {k} = {_literal(o.default)}" for k, o in opts.items()]
     return "\n".join(lines) + "\n"
 
 
