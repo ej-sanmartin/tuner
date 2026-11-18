@@ -11,6 +11,10 @@
     <img alt="CI"
       src="https://github.com/ej-sanmartin/tuner/actions/workflows/ci.yml/badge.svg">
   </a>
+  <a href="https://pypi.org/project/agent-tuner/">
+    <img alt="PyPI"
+      src="https://img.shields.io/pypi/v/agent-tuner">
+  </a>
   <a href="https://www.python.org/downloads/">
     <img alt="Python 3.13 or newer"
       src="https://img.shields.io/badge/python-3.13%2B-3776AB">
@@ -39,6 +43,23 @@ API key**.
   <img src="https://raw.githubusercontent.com/ej-sanmartin/tuner/main/docs/overview.png" width="880"
     alt="Tuner usage overview for one week">
 </p>
+
+## Agents
+
+| Agent | Tokens |
+| --- | --- |
+| Claude Code | Measured, from local transcripts |
+| Cursor | Estimated from transcripts; a dashboard CSV can replace matched turns with measured totals |
+| OpenCode | Measured, from the local database |
+| Open WebUI | Measured, from the local database |
+| Hermes | Measured, from the local database |
+
+Using an agent that is not listed?
+[Request it](https://github.com/ej-sanmartin/tuner/issues/new?title=Agent%20request%3A%20),
+or add a collector. A new agent is one class registered in
+[`build_collectors`](https://github.com/ej-sanmartin/tuner/blob/main/src/tuner/collectors/__init__.py);
+see
+[Architecture](https://github.com/ej-sanmartin/tuner/blob/main/docs/ARCHITECTURE.md#1-collectors-tunercollectors).
 
 ## Install
 
